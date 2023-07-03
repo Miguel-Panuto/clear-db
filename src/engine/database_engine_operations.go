@@ -10,7 +10,7 @@ import (
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
 )
 
-func (e *engine) listDatabases() {
+func (e *Engine) listDatabases() {
 	const baseLenName int = 4
 	const baseLenQty int = 6
 	maxLenName := baseLenName
@@ -47,7 +47,7 @@ func (e *engine) listDatabases() {
 	}
 }
 
-func (e *engine) createDatabase(dbName string) error {
+func (e *Engine) createDatabase(dbName string) error {
 	found := e.foundDatabaseByName(dbName)
 	if found {
 		return errors.New("database already created")
@@ -60,7 +60,7 @@ func (e *engine) createDatabase(dbName string) error {
 	return nil
 }
 
-func (e *engine) foundDatabaseByName(name string) bool {
+func (e *Engine) foundDatabaseByName(name string) bool {
 	found := false
 	for _, db := range e.databases {
 		if db.Name == name {

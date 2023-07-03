@@ -3,23 +3,17 @@ package engine
 import (
 	"errors"
 
-	"github.com/miguel-panuto/clear-db/src/database"
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
 	engine_parser "github.com/miguel-panuto/clear-db/src/engine/parser"
 )
 
-type engine struct {
-	selectedDatabase database.Database
-	databases        []database.Database
-}
-
-func NewEngine() *engine {
+func NewEngine() *Engine {
 	dbs, _ := engine_io.LoadDatabases()
-	return &engine{databases: *dbs}
+	return &Engine{databases: *dbs}
 }
 
-func (e *engine) RunStatement(statement string) error {
+func (e *Engine) RunStatement(statement string) error {
 	cmd, err := engine_parser.ParseString(statement)
 
 	if err != nil {

@@ -7,24 +7,24 @@ import (
 
 type Table struct {
 	Name   string
-	Fields []field
+	Fields []Field
 	Rows   []string
 }
 
-type field struct {
+type Field struct {
 	name      string
 	data_type string
 	required  bool
 }
 
-func createField(colums []string) ([]field, error) {
-	var fields []field = make([]field, len(colums))
+func createField(colums []string) ([]Field, error) {
+	var fields []Field = make([]Field, len(colums))
 	for i, value := range colums {
 		splitedField := strings.Split(value, " ")
 		if len(splitedField) < 1 {
 			return nil, errors.New("data_type not setted")
 		}
-		fields[i] = field{
+		fields[i] = Field{
 			name:      splitedField[0],
 			data_type: splitedField[1],
 			required:  strings.Contains("required", strings.ToLower(value)),
