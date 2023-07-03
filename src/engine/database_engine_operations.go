@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/miguel-panuto/clear-db/src/database"
+	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
 )
 
 func (e *engine) listDatabases() {
@@ -55,6 +56,7 @@ func (e *engine) createDatabase(dbName string) error {
 	db := database.NewDatabase(strings.TrimSpace(dbName))
 	e.databases = append(e.databases, *db)
 	fmt.Printf("Database created %s \n", db.Name)
+	go engine_io.SaveData(db)
 	return nil
 }
 
