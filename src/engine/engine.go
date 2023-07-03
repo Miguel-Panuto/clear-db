@@ -5,6 +5,7 @@ import (
 
 	"github.com/miguel-panuto/clear-db/src/database"
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
+	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
 	engine_parser "github.com/miguel-panuto/clear-db/src/engine/parser"
 )
 
@@ -14,7 +15,8 @@ type engine struct {
 }
 
 func NewEngine() *engine {
-	return &engine{databases: []database.Database{}}
+	dbs, _ := engine_io.LoadDatabases()
+	return &engine{databases: *dbs}
 }
 
 func (e *engine) RunStatement(statement string) error {
