@@ -54,7 +54,15 @@ func (e *Engine) RunStatement(statement string) error {
 			return errors.New("there is none database beeing in use")
 		}
 
-		e.createTable(cmd.Data.(engine_struct.TableCreation))
+		err := e.createTable(cmd.Data.(engine_struct.TableCreation))
+
+		if err != nil {
+			fmt.Println(err)
+		}
+		return nil
+
+	case engine_enums.LIST_TABLES:
+		e.listTables()
 		return nil
 
 	case engine_enums.EXIT:

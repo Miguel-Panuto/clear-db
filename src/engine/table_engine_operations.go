@@ -1,10 +1,19 @@
 package engine
 
-import engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
+import (
+	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
+	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
+)
 
 func (e *Engine) createTable(data engine_struct.TableCreation) error {
-	for _, value := range data.Fields {
-		println(value)
+	err := e.selectedDatabase.NewTable(data.DbName, data.Fields)
+	if err != nil {
+		return err
 	}
+	go engine_io.UpdateFile(e.selectedDatabase)
 	return nil
+}
+
+func (e *Engine) listTables() {
+	e.selectedDatabase.ListTables()
 }

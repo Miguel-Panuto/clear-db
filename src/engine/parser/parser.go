@@ -55,7 +55,11 @@ func ParseString(statement string) (*Command, error) {
 		return &Command{Operation: engine_enums.CREATE_TABLE, Data: engine_struct.TableCreation{DbName: dbName, Fields: parsedFields}}, nil
 	}
 
-	if lowerStatement == "exit" {
+	if strings.TrimSpace(lowerStatement) == "list tables" {
+		return &Command{Operation: engine_enums.LIST_TABLES}, nil
+	}
+
+	if strings.TrimSpace(lowerStatement) == "exit" {
 		return &Command{Operation: engine_enums.EXIT}, nil
 	}
 

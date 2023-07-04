@@ -5,6 +5,6 @@ import (
 )
 
 func NewDatabase(name string) *Database {
-	database := Database{Name: name, tables: []table.Table{}}
+	database := Database{Name: name, Tables: []table.Table{}}
 	return &database
 }
