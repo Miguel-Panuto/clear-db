@@ -6,4 +6,5 @@ const (
 	CREATE_DATABASE Operations = iota
 	LIST_DATABASES
 	USE_DATABASE
+	CREATE_TABLE
 )

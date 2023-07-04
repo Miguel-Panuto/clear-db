@@ -2,10 +2,12 @@ package engine
 
 import (
 	"errors"
+	"fmt"
 
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
 	engine_parser "github.com/miguel-panuto/clear-db/src/engine/parser"
+	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
 )
 
 func NewEngine() *Engine {
@@ -25,8 +27,8 @@ func (e *Engine) RunStatement(statement string) error {
 		if _, ok := cmd.Data.(string); !ok {
 			return errors.New("not entered valid name")
 		}
-		e.createDatabase(cmd.Data.(string))
-		return nil
+
+		return e.createDatabase(cmd.Data.(string))
 
 	case engine_enums.LIST_DATABASES:
 		e.listDatabases()
@@ -39,6 +41,19 @@ func (e *Engine) RunStatement(statement string) error {
 		if !e.foundDatabaseByName(cmd.Data.(string)) {
 			return errors.New("database not founded")
 		}
+
+		fmt.Println("Using database " + cmd.Data.(string))
+		return nil
+
+	case engine_enums.CREATE_TABLE:
+		if _, ok := cmd.Data.(engine_struct.TableCreation); !ok {
+			return errors.New("not entered valid name")
+		}
+		if e.selectedDatabase == nil {
+			return errors.New("there is none database beeing in use")
+		}
+
+		e.createTable(cmd.Data.(engine_struct.TableCreation))
 		return nil
 
 	default:

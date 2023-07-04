@@ -49,6 +49,10 @@ func (e *Engine) listDatabases() {
 
 func (e *Engine) createDatabase(dbName string) error {
 	found := e.foundDatabaseByName(dbName)
+	if len(dbName) < 2 {
+		return errors.New("database name length not accepted")
+	}
+
 	if found {
 		return errors.New("database already created")
 	}
@@ -64,7 +68,7 @@ func (e *Engine) foundDatabaseByName(name string) bool {
 	found := false
 	for _, db := range e.databases {
 		if db.Name == name {
-			e.selectedDatabase = db
+			e.selectedDatabase = &db
 			found = true
 			break
 		}
