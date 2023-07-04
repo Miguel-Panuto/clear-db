@@ -3,6 +3,7 @@ package engine
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
@@ -54,6 +55,10 @@ func (e *Engine) RunStatement(statement string) error {
 		}
 
 		e.createTable(cmd.Data.(engine_struct.TableCreation))
+		return nil
+
+	case engine_enums.EXIT:
+		os.Exit(0)
 		return nil
 
 	default:
