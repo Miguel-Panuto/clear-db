@@ -1,7 +1,6 @@
 package engine_io
 
 import (
-	"encoding/gob"
 	"fmt"
 	"os"
 	"path"
@@ -10,32 +9,40 @@ import (
 )
 
 func getPath(name string) string {
-	filePath := path.Join("data", name+".cdb")
-	return filePath
+	return path.Join("data", name+".cdb")
 }
 
 func SaveData(db *database.Database) error {
 	err := verifyDataFolder()
 
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 		return err
 	}
 
-	file, err := os.Create(getPath(db.Name))
+	lines := db.Name + ";;"
 
-	if err != nil {
-		fmt.Print(err)
-		return err
+	for _, value := range db.Tables {
+		lines += value.Name + ";;"
+		lines += value.GetFields()
 	}
 
-	defer file.Close()
-	encoder := gob.NewEncoder(file)
+	println(lines)
 
-	if err := encoder.Encode(db); err != nil {
-		fmt.Println("Database was not saved")
-		return err
-	}
+	// file, err := os.Create(getPath(db.Name))
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return err
+	// }
+
+	// defer file.Close()
+	// encoder := gob.NewEncoder(file)
+
+	// if err := encoder.Encode(db); err != nil {
+	// 	fmt.Println("Database was not saved")
+	// 	return err
+	// }
 
 	return nil
 }
@@ -43,21 +50,12 @@ func SaveData(db *database.Database) error {
 func UpdateFile(db *database.Database) error {
 	filePath := getPath(db.Name)
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		err := fmt.Errorf("database file %s does not exist: %w", filePath, err)
-		fmt.Println(err)
-		return err
+		return fmt.Errorf("database file %s does not exist: %w", filePath, err)
 	}
 
-	if err := os.Remove(filePath); err != nil {
-		err := fmt.Errorf("failed to remove file %s: %w", filePath, err)
-		fmt.Println(err)
-		return err
-	}
-
+	// The file exists, save the updated data directly
 	if err := SaveData(db); err != nil {
-		err := fmt.Errorf("failed to save updated data: %w", err)
-		fmt.Println(err)
-		return err
+		return fmt.Errorf("failed to save updated data: %w", err)
 	}
 
 	return nil

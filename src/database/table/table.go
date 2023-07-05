@@ -12,9 +12,9 @@ type Table struct {
 }
 
 type Field struct {
-	name      string
-	data_type string
-	required  bool
+	name       string
+	data_type  string
+	properties []string
 }
 
 func createField(columns []string) ([]Field, error) {
@@ -32,10 +32,16 @@ func createField(columns []string) ([]Field, error) {
 			return nil, err
 		}
 
+		properties := createProperties(strings.Replace(value, splitedField[0]+" "+splitedField[1], "", 1))
+
+		if err := isValidProperties(properties); err != nil {
+			return nil, err
+		}
+
 		fields[i] = Field{
-			name:      splitedField[0],
-			data_type: dataType,
-			required:  strings.Contains("required", strings.ToLower(value)),
+			name:       strings.TrimSpace(splitedField[0]),
+			data_type:  dataType,
+			properties: properties,
 		}
 	}
 	return fields, nil
@@ -50,4 +56,23 @@ func NewTable(name string, columns []string) (*Table, error) {
 
 	newTable := Table{Name: name, Fields: fields, Rows: []string{}}
 	return &newTable, nil
+}
+
+func (t *Table) GetFields() string {
+	names := ""
+	dataTypes := ""
+	for i, value := range t.Fields {
+		if i+1 == len(t.Fields) {
+			names += value.name
+			dataTypes += value.data_type
+			continue
+		}
+		names += value.name + ";"
+		dataTypes += value.data_type
+		if len(value.properties) > 0 {
+			dataTypes += "-" + strings.Join(value.properties, "-")
+		}
+		dataTypes += ";"
+	}
+	return names + ";;" + dataTypes
 }
