@@ -7,12 +7,16 @@ import (
 
 	"github.com/miguel-panuto/clear-db/src/database"
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
+	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
 	engine_parser "github.com/miguel-panuto/clear-db/src/engine/parser"
 	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
 )
 
 func NewEngine() *Engine {
-	// dbs, _ := engine_io.LoadDatabases()
+	dbs, _ := engine_io.LoadDatabases()
+	if dbs != nil {
+		return &Engine{databases: *dbs}
+	}
 	return &Engine{databases: []database.Database{}}
 }
 

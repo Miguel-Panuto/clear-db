@@ -69,7 +69,7 @@ func (t *Table) GetFields() string {
 		if len(value.properties) > 0 {
 			dataTypes += "-" + strings.Join(value.properties, "-")
 		}
-		if i < len(t.Fields) {
+		if i+1 < len(t.Fields) {
 			names += ";"
 			dataTypes += ";"
 		}

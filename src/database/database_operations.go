@@ -27,7 +27,6 @@ func (db *Database) NewTable(name string, columns []string) error {
 	}
 
 	db.Tables = append(db.Tables, *newTable)
-	fmt.Println("Table created " + name)
 	return nil
 }
 

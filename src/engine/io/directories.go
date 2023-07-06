@@ -3,6 +3,7 @@ package engine_io
 import (
 	"fmt"
 	"os"
+	"path"
 )
 
 func verifyDataFolder() error {
@@ -11,4 +12,8 @@ func verifyDataFolder() error {
 		return fmt.Errorf("failed to create directory: %w", errDir)
 	}
 	return nil
+}
+
+func getPath(name string) string {
+	return path.Join("data", name+".cdb")
 }

@@ -3,14 +3,9 @@ package engine_io
 import (
 	"fmt"
 	"os"
-	"path"
 
 	"github.com/miguel-panuto/clear-db/src/database"
 )
-
-func getPath(name string) string {
-	return path.Join("data", name+".cdb")
-}
 
 func SaveData(db *database.Database) error {
 	err := verifyDataFolder()

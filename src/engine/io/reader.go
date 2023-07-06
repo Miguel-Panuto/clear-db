@@ -1,49 +1,48 @@
 package engine_io
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+
 	"github.com/miguel-panuto/clear-db/src/database"
 )
 
 func LoadDatabases() (*[]database.Database, error) {
-	// dir := "data"
+	dir := "data"
 
-	// dirFile, err := os.Open(dir)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to open directory: %w", err)
-	// }
-	// defer dirFile.Close()
+	dirFile, err := os.Open(dir)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open directory: %w", err)
+	}
+	defer dirFile.Close()
 
-	// files, err := dirFile.Readdir(-1)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to read directory: %w", err)
-	// }
+	files, err := dirFile.Readdir(-1)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read directory: %w", err)
+	}
 
-	// dbs := []database.Database{}
+	dbs := []database.Database{}
 
-	// // Iterate over the files in the directory
-	// for _, f := range files {
-	// 	if !f.IsDir() && strings.HasSuffix(f.Name(), ".cdb") {
-	// 		// Construct the full file path
-	// 		filePath := filepath.Join(dir, f.Name())
+	for _, f := range files {
+		if !f.IsDir() && strings.HasSuffix(f.Name(), ".cdb") {
+			filePath := filepath.Join(dir, f.Name())
 
-	// 		// Open the file
-	// 		file, err := os.Open(filePath)
-	// 		if err != nil {
-	// 			return nil, fmt.Errorf("failed to open file %s: %w", filePath, err)
-	// 		}
-	// 		defer file.Close()
+			file, err := os.ReadFile(filePath)
+			if err != nil {
+				return nil, fmt.Errorf("failed to open file %s: %w", filePath, err)
+			}
 
-	// 		// Decode the file into a Database object
-	// 		var db database.Database
-	// 		decoder := gob.NewDecoder(file)
-	// 		if err := decoder.Decode(&db); err != nil {
-	// 			return nil, fmt.Errorf("failed to decode file %s: %w", filePath, err)
-	// 		}
+			db := parseToDatabase(string(file))
 
-	// 		// Add the Database object to the slice
-	// 		dbs = append(dbs, db)
-	// 	}
-	// }
+			if err != nil {
+				return nil, err
+			}
 
-	return nil, nil
+			dbs = append(dbs, db)
+		}
+	}
+
+	return &dbs, nil
 }
