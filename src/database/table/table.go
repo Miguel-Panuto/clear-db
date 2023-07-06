@@ -7,39 +7,72 @@ import (
 
 type Table struct {
 	Name   string
-	Fields []field
+	Fields []Field
 	Rows   []string
 }
 
-type field struct {
-	name      string
-	data_type string
-	required  bool
+type Field struct {
+	name       string
+	data_type  string
+	properties []string
 }
 
-func createField(colums []string) ([]field, error) {
-	var fields []field = make([]field, len(colums))
-	for i, value := range colums {
+func createField(columns []string) ([]Field, error) {
+	var fields []Field = make([]Field, len(columns))
+	for i, value := range columns {
 		splitedField := strings.Split(value, " ")
 		if len(splitedField) < 1 {
 			return nil, errors.New("data_type not setted")
 		}
-		fields[i] = field{
-			name:      splitedField[0],
-			data_type: splitedField[1],
-			required:  strings.Contains("required", strings.ToLower(value)),
+
+		dataType := strings.TrimSpace(strings.ToLower(splitedField[1]))
+		err := isValidDataType(dataType)
+
+		if err != nil {
+			return nil, err
+		}
+
+		properties := createProperties(strings.Replace(value, splitedField[0]+" "+splitedField[1], "", 1))
+
+		if err := isValidProperties(properties); err != nil {
+			return nil, err
+		}
+
+		fields[i] = Field{
+			name:       strings.TrimSpace(splitedField[0]),
+			data_type:  dataType,
+			properties: properties,
 		}
 	}
 	return fields, nil
 }
 
-func NewTable(name string, colums []string) (*Table, error) {
-	fields, err := createField(colums)
+func NewTable(name string, columns []string) (*Table, error) {
+	fields, err := createField(columns)
 
 	if err != nil {
 		return nil, err
 	}
 
-	newTable := Table{Name: name, Fields: fields, Rows: []string{}}
+	newTable := Table{Name: strings.TrimSpace(name), Fields: fields, Rows: []string{}}
 	return &newTable, nil
+}
+
+func (t *Table) GetFields() string {
+	names := ""
+	dataTypes := ""
+
+	for i, value := range t.Fields {
+		dataTypes += value.data_type
+		names += value.name
+
+		if len(value.properties) > 0 {
+			dataTypes += "-" + strings.Join(value.properties, "-")
+		}
+		if i+1 < len(t.Fields) {
+			names += ";"
+			dataTypes += ";"
+		}
+	}
+	return names + "\n" + dataTypes
 }

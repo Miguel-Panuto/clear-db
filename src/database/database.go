@@ -4,14 +4,7 @@ import (
 	"github.com/miguel-panuto/clear-db/src/database/table"
 )
 
-type Database struct {
-	Name   string
-	tables []table.Table
-}
-
-// func loadDatabases() {}
-
 func NewDatabase(name string) *Database {
-	database := Database{Name: name, tables: []table.Table{}}
+	database := Database{Name: name, Tables: []table.Table{}}
 	return &database
 }

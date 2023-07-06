@@ -5,28 +5,63 @@ import (
 	"regexp"
 	"strings"
 
-	enums_engine "github.com/miguel-panuto/clear-db/src/engine/enums"
+	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
+	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
+	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
 type Command struct {
-	Operation enums_engine.Operations
+	Operation engine_enums.Operations
 	Data      interface{}
 }
 
 func ParseString(statement string) (*Command, error) {
 	parsedStatement := strings.ReplaceAll(statement, "\n", " ")
-	if strings.HasPrefix(strings.ToLower(parsedStatement), "create database") {
+	lowerStatement := strings.ToLower(parsedStatement)
+
+	if strings.HasPrefix(lowerStatement, "create database") {
 		re := regexp.MustCompile(`(?i)create database`)
 		dbName := re.ReplaceAllString(parsedStatement, "")
-		return &Command{Operation: enums_engine.CREATE_DATABASE, Data: dbName}, nil
+		return &Command{Operation: engine_enums.CREATE_DATABASE, Data: strings.TrimSpace(dbName)}, nil
 	}
-	if strings.HasPrefix(strings.ToLower(parsedStatement), "list dbs") {
-		return &Command{Operation: enums_engine.LIST_DATABASES}, nil
+
+	if strings.HasPrefix(lowerStatement, "list dbs") {
+		return &Command{Operation: engine_enums.LIST_DATABASES}, nil
 	}
-	if strings.HasPrefix(strings.ToLower(parsedStatement), "use") {
-		re := regexp.MustCompile(`(?i)create database`)
+
+	if strings.HasPrefix(lowerStatement, "use") {
+		re := regexp.MustCompile(`(?i)use`)
 		dbName := re.ReplaceAllString(parsedStatement, "")
-		return &Command{Operation: enums_engine.USE_DATABASE, Data: dbName}, nil
+		return &Command{Operation: engine_enums.USE_DATABASE, Data: strings.TrimSpace(dbName)}, nil
+	}
+
+	if strings.HasPrefix(lowerStatement, "create table") {
+		re := regexp.MustCompile(`(?i)create table`)
+		parsedStatement = re.ReplaceAllString(parsedStatement, "")
+		splitedString := utils.Split(parsedStatement, "(")
+		dbName := splitedString[0]
+		fields := utils.Split(splitedString[1], ",")
+		parsedFields := []string{}
+		for i, value := range fields {
+			if strings.Contains(value, ")") {
+				parsedFields = append(parsedFields, strings.TrimSpace(strings.Replace(value, ")", "", 1)))
+				break
+			}
+
+			if i+1 == len(fields) {
+				return nil, errors.New("error on trying to parse columns name, table not closed with )")
+			}
+			parsedFields = append(parsedFields, strings.TrimSpace(value))
+		}
+		return &Command{Operation: engine_enums.CREATE_TABLE, Data: engine_struct.TableCreation{DbName: dbName, Fields: parsedFields}}, nil
+	}
+
+	if strings.TrimSpace(lowerStatement) == "list tables" {
+		return &Command{Operation: engine_enums.LIST_TABLES}, nil
+	}
+
+	if strings.TrimSpace(lowerStatement) == "exit" {
+		return &Command{Operation: engine_enums.EXIT}, nil
 	}
 
 	return nil, errors.New("command not found")

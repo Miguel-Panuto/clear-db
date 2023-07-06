@@ -1,10 +1,8 @@
 package engine_io
 
 import (
-	"encoding/gob"
 	"fmt"
 	"os"
-	"path"
 
 	"github.com/miguel-panuto/clear-db/src/database"
 )
@@ -13,22 +11,47 @@ func SaveData(db *database.Database) error {
 	err := verifyDataFolder()
 
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
-	filePath := path.Join("data", db.Name+".cdb")
-	file, err := os.Create(filePath)
+	lines := db.Name + "\n"
+
+	for i, value := range db.Tables {
+		if i > 0 {
+			lines += "\n;;\n"
+		}
+		lines += value.Name + "\n"
+		lines += value.GetFields()
+	}
+
+	file, err := os.Create(getPath(db.Name))
 
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 		return err
 	}
 
 	defer file.Close()
-	encoder := gob.NewEncoder(file)
-
-	if err := encoder.Encode(db); err != nil {
+	if _, err := file.Write([]byte(lines)); err != nil {
 		fmt.Println("Database was not saved")
+		return err
+	}
+
+	return nil
+}
+
+func UpdateFile(db *database.Database) error {
+	filePath := getPath(db.Name)
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		err = fmt.Errorf("database file %s does not exist: %w", filePath, err)
+		fmt.Println(err)
+		return err
+	}
+
+	if err := SaveData(db); err != nil {
+		err = fmt.Errorf("failed to save updated data: %w", err)
+		fmt.Println(err)
 		return err
 	}
 

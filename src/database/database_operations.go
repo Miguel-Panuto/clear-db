@@ -2,12 +2,13 @@ package database
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/miguel-panuto/clear-db/src/database/table"
 )
 
 func (db *Database) isThereAnyTable(name string) bool {
-	for _, table := range db.tables {
+	for _, table := range db.Tables {
 		if table.Name == name {
 			return true
 		}
@@ -15,24 +16,24 @@ func (db *Database) isThereAnyTable(name string) bool {
 	return false
 }
 
-func (db *Database) NewTable(name string, colums []string) error {
+func (db *Database) NewTable(name string, columns []string) error {
 	if db.isThereAnyTable(name) {
 		return errors.New("table already created")
 	}
 
-	newTable, err := table.NewTable(name, colums)
+	newTable, err := table.NewTable(name, columns)
 	if err != nil {
 		return err
 	}
 
-	db.tables = append(db.tables, *newTable)
+	db.Tables = append(db.Tables, *newTable)
 	return nil
 }
 
-func (*Database) ListTables(name string, colums []string) {
-
+func (db *Database) ListTables() {
+	fmt.Println(db.Tables)
 }
 
-func (e *Database) GetTablesNumber() int {
-	return len(e.tables)
+func (db *Database) GetTablesNumber() int {
+	return len(db.Tables)
 }
