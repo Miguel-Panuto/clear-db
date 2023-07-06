@@ -9,7 +9,7 @@ import (
 	"github.com/miguel-panuto/clear-db/src/database"
 )
 
-func LoadDatabases() (*[]database.Database, error) {
+func LoadDatabases() ([]*database.Database, error) {
 	dir := "data"
 
 	dirFile, err := os.Open(dir)
@@ -23,7 +23,7 @@ func LoadDatabases() (*[]database.Database, error) {
 		return nil, fmt.Errorf("failed to read directory: %w", err)
 	}
 
-	dbs := []database.Database{}
+	dbs := []*database.Database{}
 
 	for _, f := range files {
 		if !f.IsDir() && strings.HasSuffix(f.Name(), ".cdb") {
@@ -44,5 +44,5 @@ func LoadDatabases() (*[]database.Database, error) {
 		}
 	}
 
-	return &dbs, nil
+	return dbs, nil
 }
