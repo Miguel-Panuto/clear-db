@@ -8,43 +8,16 @@ import (
 
 	"github.com/miguel-panuto/clear-db/src/database"
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
+	engine_utils "github.com/miguel-panuto/clear-db/src/engine/utils"
 )
 
 func (e *Engine) listDatabases() {
-	const baseLenName int = 4
-	const baseLenQty int = 6
-	maxLenName := baseLenName
-	maxLenQty := baseLenQty
-
+	header := []string{"Name", "Tables"}
+	var rows [][]string
 	for _, db := range e.databases {
-		if len(db.Name) > maxLenName {
-			maxLenName = len(db.Name)
-		}
-		stringQty := len(strconv.Itoa(db.GetTablesNumber()))
-		if stringQty > maxLenQty {
-			maxLenQty = stringQty
-		}
+		rows = append(rows, []string{db.Name, strconv.Itoa(db.GetTablesNumber())})
 	}
-
-	blankSpacesName := strings.Repeat(" ", maxLenName-baseLenName)
-	blankSpacesQty := strings.Repeat(" ", maxLenQty-baseLenQty)
-	printStatement := "| Name " + blankSpacesName + "| Tables " + blankSpacesQty + "|"
-
-	fmt.Println(printStatement)
-	for _, value := range e.databases {
-		blankSpacesName = strings.Repeat(" ", maxLenName-len(value.Name))
-		blankSpacesQty = strings.Repeat(" ", maxLenQty-len(strconv.Itoa(value.GetTablesNumber())))
-		printStatement =
-			"| " +
-				value.Name +
-				blankSpacesName +
-				" | " +
-				strconv.Itoa(value.GetTablesNumber()) +
-				blankSpacesQty +
-				" |"
-
-		fmt.Println(printStatement)
-	}
+	engine_utils.PrintTable(header, rows)
 }
 
 func (e *Engine) createDatabase(dbName string) error {
