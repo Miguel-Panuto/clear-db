@@ -29,7 +29,7 @@ func (e *Engine) listDatabases() {
 	blankSpacesName := strings.Repeat(" ", maxLenName-baseLenName)
 	blankSpacesQty := strings.Repeat(" ", maxLenQty-baseLenQty)
 	printStatement := "| Name " + blankSpacesName + "| Tables " + blankSpacesQty + "|"
-	printStatement = strings.ReplaceAll(printStatement, "{blankSpacesQty}", blankSpacesQty)
+
 	fmt.Println(printStatement)
 	for _, value := range e.databases {
 		blankSpacesName = strings.Repeat(" ", maxLenName-len(value.Name))
