@@ -15,9 +15,9 @@ import (
 func NewEngine() *Engine {
 	dbs, _ := engine_io.LoadDatabases()
 	if dbs != nil {
-		return &Engine{databases: *dbs}
+		return &Engine{databases: dbs}
 	}
-	return &Engine{databases: []database.Database{}}
+	return &Engine{databases: []*database.Database{}}
 }
 
 func (e *Engine) RunStatement(statement string) error {

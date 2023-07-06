@@ -8,7 +8,7 @@ import (
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
-func parseToDatabase(s string) database.Database {
+func parseToDatabase(s string) *database.Database {
 	lines := utils.Split(s, "\n")
 	dbName := lines[0]
 	tables := strings.Split(strings.Replace(s, dbName+"\n", "", 1), "\n;;\n")
@@ -29,5 +29,5 @@ func parseToDatabase(s string) database.Database {
 		}
 	}
 
-	return *db
+	return db
 }

@@ -29,7 +29,7 @@ func (e *Engine) listDatabases() {
 	blankSpacesName := strings.Repeat(" ", maxLenName-baseLenName)
 	blankSpacesQty := strings.Repeat(" ", maxLenQty-baseLenQty)
 	printStatement := "| Name " + blankSpacesName + "| Tables " + blankSpacesQty + "|"
-	printStatement = strings.ReplaceAll(printStatement, "{blankSpacesQty}", blankSpacesQty)
+
 	fmt.Println(printStatement)
 	for _, value := range e.databases {
 		blankSpacesName = strings.Repeat(" ", maxLenName-len(value.Name))
@@ -58,7 +58,7 @@ func (e *Engine) createDatabase(dbName string) error {
 	}
 
 	db := database.NewDatabase(strings.TrimSpace(dbName))
-	e.databases = append(e.databases, *db)
+	e.databases = append(e.databases, db)
 	fmt.Printf("Database created %s \n", db.Name)
 	go engine_io.SaveData(db)
 	return nil
@@ -68,7 +68,7 @@ func (e *Engine) foundDatabaseByName(name string) bool {
 	found := false
 	for _, db := range e.databases {
 		if db.Name == name {
-			e.selectedDatabase = &db
+			e.selectedDatabase = db
 			found = true
 			break
 		}
