@@ -1,10 +1,14 @@
 package table
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/miguel-panuto/clear-db/src/utils"
+)
 
 func createProperties(rawProperties string) []string {
 	properties := strings.ToLower(rawProperties)
 	properties = strings.TrimSpace(properties)
 
-	return strings.Split(properties, " ")
+	return utils.Split(properties, " ")
 }

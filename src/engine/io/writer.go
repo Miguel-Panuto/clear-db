@@ -20,29 +20,28 @@ func SaveData(db *database.Database) error {
 		return err
 	}
 
-	lines := db.Name + ";;"
+	lines := db.Name + "\n"
 
-	for _, value := range db.Tables {
-		lines += value.Name + ";;"
+	for i, value := range db.Tables {
+		if i > 0 {
+			lines += "\n;;\n"
+		}
+		lines += value.Name + "\n"
 		lines += value.GetFields()
 	}
 
-	println(lines)
+	file, err := os.Create(getPath(db.Name))
 
-	// file, err := os.Create(getPath(db.Name))
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return err
-	// }
-
-	// defer file.Close()
-	// encoder := gob.NewEncoder(file)
-
-	// if err := encoder.Encode(db); err != nil {
-	// 	fmt.Println("Database was not saved")
-	// 	return err
-	// }
+	defer file.Close()
+	if _, err := file.Write([]byte(lines)); err != nil {
+		fmt.Println("Database was not saved")
+		return err
+	}
 
 	return nil
 }
@@ -50,12 +49,15 @@ func SaveData(db *database.Database) error {
 func UpdateFile(db *database.Database) error {
 	filePath := getPath(db.Name)
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return fmt.Errorf("database file %s does not exist: %w", filePath, err)
+		err = fmt.Errorf("database file %s does not exist: %w", filePath, err)
+		fmt.Println(err)
+		return err
 	}
 
-	// The file exists, save the updated data directly
 	if err := SaveData(db); err != nil {
-		return fmt.Errorf("failed to save updated data: %w", err)
+		err = fmt.Errorf("failed to save updated data: %w", err)
+		fmt.Println(err)
+		return err
 	}
 
 	return nil

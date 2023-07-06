@@ -7,6 +7,7 @@ import (
 
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
 	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
+	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
 type Command struct {
@@ -37,9 +38,9 @@ func ParseString(statement string) (*Command, error) {
 	if strings.HasPrefix(lowerStatement, "create table") {
 		re := regexp.MustCompile(`(?i)create table`)
 		parsedStatement = re.ReplaceAllString(parsedStatement, "")
-		splitedString := strings.Split(parsedStatement, "(")
+		splitedString := utils.Split(parsedStatement, "(")
 		dbName := splitedString[0]
-		fields := strings.Split(splitedString[1], ",")
+		fields := utils.Split(splitedString[1], ",")
 		parsedFields := []string{}
 		for i, value := range fields {
 			if strings.Contains(value, ")") {

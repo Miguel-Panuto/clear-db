@@ -54,25 +54,25 @@ func NewTable(name string, columns []string) (*Table, error) {
 		return nil, err
 	}
 
-	newTable := Table{Name: name, Fields: fields, Rows: []string{}}
+	newTable := Table{Name: strings.TrimSpace(name), Fields: fields, Rows: []string{}}
 	return &newTable, nil
 }
 
 func (t *Table) GetFields() string {
 	names := ""
 	dataTypes := ""
+
 	for i, value := range t.Fields {
-		if i+1 == len(t.Fields) {
-			names += value.name
-			dataTypes += value.data_type
-			continue
-		}
-		names += value.name + ";"
 		dataTypes += value.data_type
+		names += value.name
+
 		if len(value.properties) > 0 {
 			dataTypes += "-" + strings.Join(value.properties, "-")
 		}
-		dataTypes += ";"
+		if i < len(t.Fields) {
+			names += ";"
+			dataTypes += ";"
+		}
 	}
-	return names + ";;" + dataTypes
+	return names + "\n" + dataTypes
 }
