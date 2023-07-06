@@ -2,11 +2,10 @@ package database
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/miguel-panuto/clear-db/src/database/table"
+	engine_utils "github.com/miguel-panuto/clear-db/src/engine/utils"
 )
 
 func (db *Database) isThereAnyTable(name string) bool {
@@ -33,41 +32,12 @@ func (db *Database) NewTable(name string, columns []string) error {
 }
 
 func (db *Database) ListTables() {
-	const baseLenName int = 4
-	const baseLenQty int = 4
-
-	maxLenName := baseLenName
-	maxLenQty := baseLenQty
+	header := []string{"Name", "Rows"}
+	var rows [][]string
 	for _, table := range db.Tables {
-		if len(table.Name) > maxLenName {
-			maxLenName = len(table.Name)
-		}
-
-		stringQty := len(strconv.Itoa(len(table.Rows)))
-		if stringQty > maxLenQty {
-			maxLenQty = stringQty
-		}
+		rows = append(rows, []string{table.Name, strconv.Itoa(len(table.Rows))})
 	}
-
-	blankSpacesName := strings.Repeat(" ", maxLenName-baseLenName)
-	blankSpacesQty := strings.Repeat(" ", maxLenQty-baseLenQty)
-
-	printStatement := "| Name " + blankSpacesName + "| Rows " + blankSpacesQty + "|"
-	fmt.Println(printStatement)
-	for _, value := range db.Tables {
-		blankSpacesName = strings.Repeat(" ", maxLenName-len(value.Name))
-		blankSpacesQty = strings.Repeat(" ", maxLenQty-len(strconv.Itoa(len(value.Rows))))
-		printStatement =
-			"| " +
-				value.Name +
-				blankSpacesName +
-				" | " +
-				strconv.Itoa(len(value.Rows)) +
-				blankSpacesQty +
-				" |"
-
-		fmt.Println(printStatement)
-	}
+	engine_utils.PrintTable(header, rows)
 }
 
 func (db *Database) GetTablesNumber() int {
