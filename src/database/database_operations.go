@@ -35,9 +35,24 @@ func (db *Database) ListTables() {
 	header := []string{"Name", "Rows"}
 	var rows [][]string
 	for _, table := range db.Tables {
-		rows = append(rows, []string{table.Name, strconv.Itoa(len(table.Rows))})
+		rows = append(rows, []string{table.Name, strconv.Itoa(len(*table.Rows))})
 	}
 	engine_utils.PrintTable(header, rows)
+}
+
+func (db *Database) FindTable(tableName string) (*table.Table, error) {
+	if !db.isThereAnyTable(tableName) {
+		return nil, errors.New("no table founded")
+	}
+
+	var table table.Table
+	for _, value := range db.Tables {
+		if value.Name == tableName {
+			table = value
+			break
+		}
+	}
+	return &table, nil
 }
 
 func (db *Database) GetTablesNumber() int {

@@ -24,8 +24,13 @@ func parseToDatabase(s string) *database.Database {
 		for i := range fieldNames {
 			columns = append(columns, fieldNames[i]+" "+strings.ReplaceAll(fieldAtt[i], "-", " "))
 		}
+
 		if err := db.NewTable(tableName, columns); err != nil {
 			fmt.Println(err)
+		}
+		table, _ := db.FindTable(tableName)
+		for i := 3; i < len(splitedRawTable); i++ {
+			table.InsertRow(utils.Split(splitedRawTable[i], ";"))
 		}
 	}
 

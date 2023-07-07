@@ -8,7 +8,7 @@ import (
 type Table struct {
 	Name   string
 	Fields []Field
-	Rows   [][]string
+	Rows   *[][]string
 }
 
 type Field struct {
@@ -54,7 +54,7 @@ func NewTable(name string, columns []string) (*Table, error) {
 		return nil, err
 	}
 
-	newTable := Table{Name: strings.TrimSpace(name), Fields: fields, Rows: [][]string{}}
+	newTable := Table{Name: strings.TrimSpace(name), Fields: fields, Rows: &[][]string{}}
 	return &newTable, nil
 }
 

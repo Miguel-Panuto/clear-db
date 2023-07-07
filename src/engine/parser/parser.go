@@ -52,13 +52,13 @@ func ParseString(statement string) (*Command, error) {
 		return &Command{Operation: engine_enums.LIST_TABLES}, nil
 	}
 
-	if strings.TrimSpace(lowerStatement) == "insert" {
+	if strings.HasPrefix(strings.TrimSpace(lowerStatement), "insert") {
 		re := regexp.MustCompile(`(?i)insert`)
 		parsedStatement = re.ReplaceAllString(parsedStatement, "")
 		splitedString := utils.Split(parsedStatement, ":")
 
 		tableName := strings.TrimSpace(splitedString[0])
-		row := utils.Split(splitedString[1], ",")
+		row := utils.TrimSplit(splitedString[1], ",")
 		return &Command{
 			Operation: engine_enums.INSERT_INTO,
 			Data:      engine_struct.RowInsert{TabName: tableName, Row: row}}, nil

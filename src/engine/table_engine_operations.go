@@ -20,3 +20,19 @@ func (e *Engine) createTable(data engine_struct.TableCreation) error {
 func (e *Engine) listTables() {
 	e.selectedDatabase.ListTables()
 }
+
+func (e *Engine) insert(data engine_struct.RowInsert) error {
+	table, err := e.selectedDatabase.FindTable(data.TabName)
+
+	if err != nil {
+		return err
+	}
+
+	if err := table.InsertRow(data.Row); err != nil {
+		return err
+	}
+	fmt.Println("new row was inserted")
+	go engine_io.UpdateFile(e.selectedDatabase)
+
+	return nil
+}

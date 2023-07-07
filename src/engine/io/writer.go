@@ -24,12 +24,10 @@ func SaveData(db *database.Database) error {
 		}
 		lines += value.Name + "\n"
 		lines += value.GetFields()
-		if len(value.Rows) > 0 {
-			for i, row := range value.Rows {
-				if i > 0 {
-					lines += "\n"
-				}
-				lines += strings.Join(row, ";")
+
+		if len(*value.Rows) > 0 {
+			for _, row := range *value.Rows {
+				lines += "\n" + strings.Join(row, ";")
 			}
 		}
 	}
