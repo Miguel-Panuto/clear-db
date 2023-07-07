@@ -19,8 +19,8 @@ func ParseString(statement string) (*Command, error) {
 	parsedStatement := strings.ReplaceAll(statement, "\n", " ")
 	lowerStatement := strings.ToLower(parsedStatement)
 
-	if strings.HasPrefix(lowerStatement, "create database") {
-		re := regexp.MustCompile(`(?i)create database`)
+	if strings.HasPrefix(lowerStatement, "new db") {
+		re := regexp.MustCompile(`(?i)new db`)
 		dbName := re.ReplaceAllString(parsedStatement, "")
 		return &Command{Operation: engine_enums.CREATE_DATABASE, Data: strings.TrimSpace(dbName)}, nil
 	}
@@ -35,25 +35,17 @@ func ParseString(statement string) (*Command, error) {
 		return &Command{Operation: engine_enums.USE_DATABASE, Data: strings.TrimSpace(dbName)}, nil
 	}
 
-	if strings.HasPrefix(lowerStatement, "create table") {
-		re := regexp.MustCompile(`(?i)create table`)
+	if strings.HasPrefix(lowerStatement, "new table") {
+		re := regexp.MustCompile(`(?i)new table`)
 		parsedStatement = re.ReplaceAllString(parsedStatement, "")
-		splitedString := utils.Split(parsedStatement, "(")
-		dbName := splitedString[0]
+		splitedString := utils.Split(parsedStatement, ":")
+		tableName := splitedString[0]
 		fields := utils.Split(splitedString[1], ",")
 		parsedFields := []string{}
-		for i, value := range fields {
-			if strings.Contains(value, ")") {
-				parsedFields = append(parsedFields, strings.TrimSpace(strings.Replace(value, ")", "", 1)))
-				break
-			}
-
-			if i+1 == len(fields) {
-				return nil, errors.New("error on trying to parse columns name, table not closed with )")
-			}
+		for _, value := range fields {
 			parsedFields = append(parsedFields, strings.TrimSpace(value))
 		}
-		return &Command{Operation: engine_enums.CREATE_TABLE, Data: engine_struct.TableCreation{DbName: dbName, Fields: parsedFields}}, nil
+		return &Command{Operation: engine_enums.CREATE_TABLE, Data: engine_struct.TableCreation{DbName: tableName, Fields: parsedFields}}, nil
 	}
 
 	if strings.TrimSpace(lowerStatement) == "list tables" {
