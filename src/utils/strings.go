@@ -19,3 +19,10 @@ func TrimSplit(s string, sep string) []string {
 
 	return arr
 }
+
+func SubString(s string, from string, until string) string {
+	fromIndex := strings.Index(s, from) + 1
+	untilIndex := strings.Index(s, until)
+	substring := s[fromIndex:untilIndex]
+	return substring
+}
