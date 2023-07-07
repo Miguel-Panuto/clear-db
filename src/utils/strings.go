@@ -26,3 +26,19 @@ func SubString(s string, from string, until string) string {
 	substring := s[fromIndex:untilIndex]
 	return substring
 }
+
+func VerifyLowerPrefix(s string, prefix string) bool {
+	aux := strings.ToLower(s)
+
+	aux = strings.TrimSpace(aux)
+
+	return strings.HasPrefix(aux, prefix)
+}
+
+func VerifyLower(s string, command string) bool {
+	aux := strings.ToLower(s)
+
+	aux = strings.TrimSpace(aux)
+
+	return s == command
+}
