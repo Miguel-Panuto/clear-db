@@ -20,6 +20,13 @@ func NewEngine() *Engine {
 	return &Engine{databases: []*database.Database{}}
 }
 
+func (e *Engine) isSelectedDatabase() error {
+	if e.selectedDatabase == nil {
+		return errors.New("there is none database beeing in use")
+	}
+	return nil
+}
+
 func (e *Engine) RunStatement(statement string) error {
 	cmd, err := engine_parser.ParseString(statement)
 
@@ -54,8 +61,8 @@ func (e *Engine) RunStatement(statement string) error {
 		if _, ok := cmd.Data.(engine_struct.TableCreation); !ok {
 			return errors.New("not entered valid name")
 		}
-		if e.selectedDatabase == nil {
-			return errors.New("there is none database beeing in use")
+		if err := e.isSelectedDatabase(); err != nil {
+			return err
 		}
 
 		err := e.createTable(cmd.Data.(engine_struct.TableCreation))
@@ -67,6 +74,15 @@ func (e *Engine) RunStatement(statement string) error {
 
 	case engine_enums.LIST_TABLES:
 		e.listTables()
+		return nil
+
+	case engine_enums.INSERT_INTO:
+		if err := e.isSelectedDatabase(); err != nil {
+			return err
+		}
+		if err := e.insert(cmd.Data.(engine_struct.RowInsert)); err != nil {
+			return err
+		}
 		return nil
 
 	case engine_enums.EXIT:

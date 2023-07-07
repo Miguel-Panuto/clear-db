@@ -24,7 +24,7 @@ func isValidProperties(properties []string) error {
 		return nil
 	}
 
-	validProperties := []string{"required", "asd"}
+	validProperties := []string{"required", "unique"}
 
 	if len(properties) > len(validProperties)+1 {
 		return errors.New("there is more properties then the valids " + strings.Join(properties, " "))

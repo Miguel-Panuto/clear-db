@@ -3,6 +3,7 @@ package engine_io
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/miguel-panuto/clear-db/src/database"
 )
@@ -23,6 +24,12 @@ func SaveData(db *database.Database) error {
 		}
 		lines += value.Name + "\n"
 		lines += value.GetFields()
+
+		if len(*value.Rows) > 0 {
+			for _, row := range *value.Rows {
+				lines += "\n" + strings.Join(row, ";")
+			}
+		}
 	}
 
 	file, err := os.Create(getPath(db.Name))
