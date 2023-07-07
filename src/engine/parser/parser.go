@@ -6,8 +6,6 @@ import (
 	"strings"
 
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
-	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
-	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
 type Command struct {
@@ -20,9 +18,7 @@ func ParseString(statement string) (*Command, error) {
 	lowerStatement := strings.ToLower(parsedStatement)
 
 	if strings.HasPrefix(lowerStatement, "new db") {
-		re := regexp.MustCompile(`(?i)new db`)
-		dbName := re.ReplaceAllString(parsedStatement, "")
-		return &Command{Operation: engine_enums.CREATE_DATABASE, Data: strings.TrimSpace(dbName)}, nil
+		return newDbParse(parsedStatement)
 	}
 
 	if strings.HasPrefix(lowerStatement, "list dbs") {
@@ -36,16 +32,7 @@ func ParseString(statement string) (*Command, error) {
 	}
 
 	if strings.HasPrefix(lowerStatement, "new table") {
-		re := regexp.MustCompile(`(?i)new table`)
-		parsedStatement = re.ReplaceAllString(parsedStatement, "")
-		splitedString := utils.Split(parsedStatement, ":")
-		tableName := splitedString[0]
-		fields := utils.Split(splitedString[1], ",")
-		parsedFields := []string{}
-		for _, value := range fields {
-			parsedFields = append(parsedFields, strings.TrimSpace(value))
-		}
-		return &Command{Operation: engine_enums.CREATE_TABLE, Data: engine_struct.TableCreation{DbName: tableName, Fields: parsedFields}}, nil
+		return newTable(parsedStatement)
 	}
 
 	if strings.TrimSpace(lowerStatement) == "list tables" {
@@ -53,15 +40,7 @@ func ParseString(statement string) (*Command, error) {
 	}
 
 	if strings.HasPrefix(strings.TrimSpace(lowerStatement), "insert") {
-		re := regexp.MustCompile(`(?i)insert`)
-		parsedStatement = re.ReplaceAllString(parsedStatement, "")
-		splitedString := utils.Split(parsedStatement, ":")
-
-		tableName := strings.TrimSpace(splitedString[0])
-		row := utils.TrimSplit(splitedString[1], ",")
-		return &Command{
-			Operation: engine_enums.INSERT_INTO,
-			Data:      engine_struct.RowInsert{TabName: tableName, Row: row}}, nil
+		return insertTable(parsedStatement)
 	}
 
 	if strings.TrimSpace(lowerStatement) == "exit" {
