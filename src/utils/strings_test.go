@@ -47,3 +47,35 @@ func TestSubstring(t *testing.T) {
 		t.Errorf("not expected value got: %s - want: %s", got, want)
 	}
 }
+
+func TestLowerPrefix(t *testing.T) {
+	got := VerifyLowerPrefix(" Use certain db", "use")
+	want := true
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+
+	got = VerifyLowerPrefix(" Use certain db", "notuse")
+	want = false
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+}
+
+func TestLower(t *testing.T) {
+	got := VerifyLower(" Use ", "use")
+	want := true
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+
+	got = VerifyLower(" Use ", "notuse")
+	want = false
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+}

@@ -40,5 +40,5 @@ func VerifyLower(s string, command string) bool {
 
 	aux = strings.TrimSpace(aux)
 
-	return s == command
+	return aux == command
 }
