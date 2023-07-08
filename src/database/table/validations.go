@@ -2,13 +2,15 @@ package table
 
 import (
 	"errors"
+	"strconv"
 	"strings"
 
 	"golang.org/x/exp/slices"
 )
 
+var validDataType []string = []string{"string", "id", "int", "float", "boolean"}
+
 func isValidDataType(dataType string) error {
-	validDataType := []string{"string", "id", "int", "float", "json", "boolean"}
 
 	isValid := slices.Contains(validDataType, dataType)
 
@@ -37,4 +39,45 @@ func isValidProperties(properties []string) error {
 	}
 
 	return nil
+}
+
+func getValueType(value string, dataType string) (interface{}, error) {
+	if err := isValidDataType(dataType); err != nil {
+		return nil, err
+	}
+
+	switch dataType {
+	case "string":
+		return value, nil
+	case "int":
+		v, err := strconv.Atoi(value)
+		if err != nil {
+			return nil, err
+		}
+		return v, nil
+
+	case "float":
+		v, err := strconv.ParseFloat(value, 64)
+		if err != nil {
+			return nil, err
+		}
+		return v, nil
+
+	case "id":
+		return getId(), nil
+
+	case "boolean":
+		if value == "true" {
+			return true, nil
+		}
+
+		if value == "false" {
+			return false, nil
+		}
+
+		return nil, errors.New("not valid value for boolean")
+
+	default:
+		return nil, errors.New("unknown dataType")
+	}
 }

@@ -23,7 +23,7 @@ func SaveData(db *database.Database) error {
 			lines += "\n;;\n"
 		}
 		lines += value.Name + "\n"
-		lines += value.GetFields()
+		lines += value.GetFieldsString()
 
 		if len(*value.Rows) > 0 {
 			for _, row := range *value.Rows {
