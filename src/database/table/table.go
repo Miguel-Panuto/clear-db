@@ -8,7 +8,7 @@ import (
 type Table struct {
 	Name   string
 	Fields []Field
-	Rows   *[][]string
+	Rows   *[][]interface{}
 }
 
 type Field struct {
@@ -54,11 +54,11 @@ func NewTable(name string, columns []string) (*Table, error) {
 		return nil, err
 	}
 
-	newTable := Table{Name: strings.TrimSpace(name), Fields: fields, Rows: &[][]string{}}
+	newTable := Table{Name: strings.TrimSpace(name), Fields: fields, Rows: &[][]interface{}{}}
 	return &newTable, nil
 }
 
-func (t *Table) GetFields() string {
+func (t *Table) GetFieldsString() string {
 	names := ""
 	dataTypes := ""
 
@@ -75,4 +75,14 @@ func (t *Table) GetFields() string {
 		}
 	}
 	return names + "\n" + dataTypes
+}
+
+func (t *Table) GetFields() []string {
+	arr := make([]string, len(t.Fields))
+
+	for _, value := range t.Fields {
+		arr = append(arr, value.name)
+	}
+
+	return arr
 }

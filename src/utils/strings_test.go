@@ -47,3 +47,66 @@ func TestSubstring(t *testing.T) {
 		t.Errorf("not expected value got: %s - want: %s", got, want)
 	}
 }
+
+func TestLowerPrefix(t *testing.T) {
+	got := VerifyLowerPrefix(" Use certain db", "use")
+	want := true
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+
+	got = VerifyLowerPrefix(" Use certain db", "notuse")
+	want = false
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+}
+
+func TestLower(t *testing.T) {
+	got := VerifyLower(" Use ", "use")
+	want := true
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+
+	got = VerifyLower(" Use ", "notuse")
+	want = false
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+}
+
+func TestMakeStringArr(t *testing.T) {
+	testObj := []interface{}{1, 2, 3.53, "name"}
+	got := MakeStringArr(testObj)
+	want := []string{"1", "2", "3.53", "name"}
+
+	if len(got) != len(want) {
+		t.Errorf("different sizes got %d want %d", len(got), len(want))
+	}
+
+	for i := range got {
+		if got[i] != want[i] {
+			t.Errorf("they are different got: %s - want: %s", got[i], want[i])
+		}
+	}
+}
+
+func TestContaisMany(t *testing.T) {
+	got := ContainsMany("{Place}", "{", "}")
+	want := true
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+
+	got = ContainsMany("{Place", "{", "}")
+	want = false
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+}
