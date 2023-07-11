@@ -7,25 +7,32 @@ import (
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
-func indexOf(row []string, field string, originalIndex int) *string {
+func (f *Field) validateAndReturn(row []string) *string {
+	defaultValue := "null"
 	for _, el := range row {
 		if !strings.Contains(el, "::") {
 			return &el
 		}
 
 		values := utils.TrimSplit(el, "::")
-		if values[0] == field {
+		if values[0] == f.name {
 			return &values[1]
+		}
+
+		for _, prop := range f.properties {
+			if prop == "required" {
+				return nil
+			}
 		}
 	}
 
-	return nil
+	return &defaultValue
 }
 
 func (t *Table) InsertNewRow(row []string) error {
 	parsedRows := []interface{}{}
-	for i, value := range t.Fields {
-		el := indexOf(row, value.name, i)
+	for _, value := range t.Fields {
+		el := value.validateAndReturn(row)
 		if el == nil {
 			return errors.New("column not finded")
 		}
