@@ -82,7 +82,7 @@ func TestLower(t *testing.T) {
 
 func TestMakeStringArr(t *testing.T) {
 	testObj := []interface{}{1, 2, 3.53, "name"}
-	got := MakeStringArr(testObj...)
+	got := MakeStringArr(testObj)
 	want := []string{"1", "2", "3.53", "name"}
 
 	if len(got) != len(want) {
@@ -93,5 +93,20 @@ func TestMakeStringArr(t *testing.T) {
 		if got[i] != want[i] {
 			t.Errorf("they are different got: %s - want: %s", got[i], want[i])
 		}
+	}
+}
+
+func TestContaisMany(t *testing.T) {
+	got := ContainsMany("{Place}", "{", "}")
+	want := true
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+
+	got = ContainsMany("{Place", "{", "}")
+	want = false
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
 	}
 }

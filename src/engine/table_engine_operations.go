@@ -28,7 +28,7 @@ func (e *Engine) insert(data engine_struct.RowInsert) error {
 		return err
 	}
 
-	if err := table.InsertRow(data.Row); err != nil {
+	if err := table.InsertNewRow(data.Row); err != nil {
 		return err
 	}
 	fmt.Println("new row was inserted")

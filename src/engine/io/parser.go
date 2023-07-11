@@ -30,7 +30,8 @@ func parseToDatabase(s string) *database.Database {
 		}
 		table, _ := db.FindTable(tableName)
 		for i := 3; i < len(splitedRawTable); i++ {
-			table.InsertRow(utils.Split(splitedRawTable[i], ";"))
+			splitedString := utils.Split(splitedRawTable[i], ";")
+			table.InsertFromReader(utils.ToInterfaceArr(splitedString))
 		}
 	}
 

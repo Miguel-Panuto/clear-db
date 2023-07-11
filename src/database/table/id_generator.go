@@ -22,6 +22,7 @@ func getId() string {
 }
 
 func StartIds(howMuch int) {
+	ids = make([]string, howMuch)
 	for i := 0; i < howMuch; i++ {
 		u, err := uuid.NewRandom()
 		if err != nil {

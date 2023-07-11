@@ -23,6 +23,18 @@ func TrimSplit(s string, sep string) []string {
 	return arr
 }
 
+func ContainsMany(s string, values ...string) bool {
+	contains := true
+
+	for _, el := range values {
+		if !strings.Contains(s, el) {
+			contains = false
+		}
+	}
+
+	return contains
+}
+
 func SubString(s string, from string, until string) string {
 	fromIndex := strings.Index(s, from) + 1
 	untilIndex := strings.Index(s, until)
@@ -46,7 +58,7 @@ func VerifyLower(s string, command string) bool {
 	return aux == command
 }
 
-func MakeStringArr(i ...any) []string {
+func MakeStringArr(i []any) []string {
 	arr := []string{}
 	for _, value := range i {
 		arr = append(arr, fmt.Sprint(value))
