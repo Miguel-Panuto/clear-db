@@ -5,6 +5,14 @@ import (
 	"strings"
 )
 
+func SplitFirst(s string, sep string) []string {
+	if len(s) == 0 {
+		return []string{}
+	}
+
+	return strings.SplitN(s, sep, 2)
+}
+
 func Split(s string, sep string) []string {
 	if len(s) == 0 {
 		return []string{}

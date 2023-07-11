@@ -14,7 +14,7 @@ func insertTable(parsedStatement string) (*Command, error) {
 	re := regexp.MustCompile(`(?i)insert`)
 	parsedStatement = re.ReplaceAllString(parsedStatement, "")
 
-	splitedString := utils.Split(parsedStatement, ":")
+	splitedString := utils.SplitFirst(parsedStatement, ":")
 
 	tableName := strings.TrimSpace(splitedString[0])
 
