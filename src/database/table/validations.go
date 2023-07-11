@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/miguel-panuto/clear-db/src/utils"
 	"golang.org/x/exp/slices"
 )
 
@@ -48,13 +49,16 @@ func getValueType(value string, dataType string) (interface{}, error) {
 
 	switch dataType {
 	case "string":
-		return value, nil
+		if utils.IsBetween(value, "'", "'") {
+			return strings.ReplaceAll(value, "'", ""), nil
+		}
+		return nil, errors.New("invalid value for string")
 	case "int":
 		v, err := strconv.Atoi(value)
 		if err != nil {
 			return nil, err
 		}
-		return strconv.Itoa(v), nil
+		return v, nil
 
 	case "float":
 		v, err := strconv.ParseFloat(value, 64)

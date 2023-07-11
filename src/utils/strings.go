@@ -35,6 +35,10 @@ func ContainsMany(s string, values ...string) bool {
 	return contains
 }
 
+func IsBetween(s string, from string, until string) bool {
+	return strings.HasPrefix(s, from) && strings.HasSuffix(s, until)
+}
+
 func SubString(s string, from string, until string) string {
 	fromIndex := strings.Index(s, from) + 1
 	untilIndex := strings.Index(s, until)
