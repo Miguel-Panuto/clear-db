@@ -23,6 +23,7 @@ func indexOf(row []string, field string, originalIndex int) int {
 }
 
 func (t *Table) InsertRow(row []string) error {
+	parsedRows := []interface{}{}
 	for i, value := range t.Fields {
 		index := indexOf(row, value.name, i)
 		if index < 0 {
@@ -30,9 +31,13 @@ func (t *Table) InsertRow(row []string) error {
 		}
 
 		parsedValue, err := getValueType(row[index], value.data_type)
+		if err != nil {
+			return err
+		}
+		parsedRows = append(parsedRows, parsedValue)
 	}
 
-	*t.Rows = append(*t.Rows, row)
+	*t.Rows = append(*t.Rows, parsedRows)
 
 	return nil
 }

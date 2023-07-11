@@ -54,7 +54,7 @@ func getValueType(value string, dataType string) (interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
-		return v, nil
+		return strconv.Itoa(v), nil
 
 	case "float":
 		v, err := strconv.ParseFloat(value, 64)

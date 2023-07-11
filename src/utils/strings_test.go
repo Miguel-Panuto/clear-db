@@ -79,3 +79,19 @@ func TestLower(t *testing.T) {
 		t.Errorf("not expected value got: %t - want: %t", got, want)
 	}
 }
+
+func TestMakeStringArr(t *testing.T) {
+	testObj := []interface{}{1, 2, 3.53, "name"}
+	got := MakeStringArr(testObj...)
+	want := []string{"1", "2", "3.53", "name"}
+
+	if len(got) != len(want) {
+		t.Errorf("different sizes got %d want %d", len(got), len(want))
+	}
+
+	for i := range got {
+		if got[i] != want[i] {
+			t.Errorf("they are different got: %s - want: %s", got[i], want[i])
+		}
+	}
+}

@@ -1,6 +1,9 @@
 package utils
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 func Split(s string, sep string) []string {
 	if len(s) == 0 {
@@ -41,4 +44,13 @@ func VerifyLower(s string, command string) bool {
 	aux = strings.TrimSpace(aux)
 
 	return aux == command
+}
+
+func MakeStringArr(i ...any) []string {
+	arr := []string{}
+	for _, value := range i {
+		arr = append(arr, fmt.Sprint(value))
+	}
+
+	return arr
 }

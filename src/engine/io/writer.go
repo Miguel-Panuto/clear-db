@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/miguel-panuto/clear-db/src/database"
+	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
 func SaveData(db *database.Database) error {
@@ -27,7 +28,8 @@ func SaveData(db *database.Database) error {
 
 		if len(*value.Rows) > 0 {
 			for _, row := range *value.Rows {
-				lines += "\n" + strings.Join(row, ";")
+				arrStr := utils.MakeStringArr(row)
+				lines += "\n" + strings.Join(arrStr, ";")
 			}
 		}
 	}
