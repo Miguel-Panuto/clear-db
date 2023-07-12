@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/miguel-panuto/clear-db/src/database"
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
 	engine_parser "github.com/miguel-panuto/clear-db/src/engine/parser"
@@ -17,7 +16,7 @@ func NewEngine() *Engine {
 	if dbs != nil {
 		return &Engine{databases: dbs}
 	}
-	return &Engine{databases: []*database.Database{}}
+	return &Engine{databases: []string{}}
 }
 
 func (e *Engine) isSelectedDatabase() error {
@@ -50,9 +49,7 @@ func (e *Engine) RunStatement(statement string) error {
 		if _, ok := cmd.Data.(string); !ok {
 			return errors.New("not entered valid name")
 		}
-		if !e.foundDatabaseByName(cmd.Data.(string)) {
-			return errors.New("database not founded")
-		}
+		e.useDb(cmd.Data.(string))
 
 		fmt.Println("Using database " + cmd.Data.(string))
 		return nil
