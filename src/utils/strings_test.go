@@ -96,7 +96,7 @@ func TestMakeStringArr(t *testing.T) {
 	}
 }
 
-func TestContaisMany(t *testing.T) {
+func TestContainsMany(t *testing.T) {
 	got := ContainsMany("{Place}", "{", "}")
 	want := true
 
@@ -105,6 +105,21 @@ func TestContaisMany(t *testing.T) {
 	}
 
 	got = ContainsMany("{Place", "{", "}")
+	want = false
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+}
+
+func TestContainsInside(t *testing.T) {
+	got := ContainsInside([]string{"required"}, "required")
+	want := true
+
+	if got != want {
+		t.Errorf("not expected value got: %t - want: %t", got, want)
+	}
+
+	got = ContainsInside([]string{"required"}, "unique")
 	want = false
 	if got != want {
 		t.Errorf("not expected value got: %t - want: %t", got, want)

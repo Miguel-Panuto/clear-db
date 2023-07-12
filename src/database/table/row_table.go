@@ -7,30 +7,47 @@ import (
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
-func indexOf(row []string, field string, originalIndex int) *string {
+func (f *Field) validateAndReturn(row []string, originalIndex int) (string, error) {
 	for _, el := range row {
 		if !strings.Contains(el, "::") {
-			return &el
+			return row[originalIndex], nil
+		}
+		values := utils.TrimSplit(el, "::")
+		if values[0] == f.name {
+			return values[1], nil
 		}
 
-		values := utils.TrimSplit(el, "::")
-		if values[0] == field {
-			return &values[1]
+		if utils.ContainsInside(f.properties, "required") {
+			return "", errors.New("required field must be filled")
 		}
 	}
 
-	return nil
+	return "null", nil
+}
+
+func (t *Table) findValue(i int, value interface{}) bool {
+	for _, row := range *t.Rows {
+		if row[i] == value {
+			return true
+		}
+	}
+	return false
 }
 
 func (t *Table) InsertNewRow(row []string) error {
 	parsedRows := []interface{}{}
-	for i, value := range t.Fields {
-		el := indexOf(row, value.name, i)
-		if el == nil {
-			return errors.New("column not finded")
+	for i, f := range t.Fields {
+		el, err := f.validateAndReturn(row, i)
+		if err != nil {
+			return err
 		}
 
-		parsedValue, err := getValueType(*el, value.data_type)
+		parsedValue, err := getValueType(el, f.data_type)
+		if utils.ContainsInside(f.properties, "unique") {
+			if t.findValue(i, parsedValue) {
+				return errors.New("unique value must be unique")
+			}
+		}
 		if err != nil {
 			return err
 		}
