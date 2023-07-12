@@ -17,11 +17,12 @@ func SaveData(db *database.Database) error {
 		return err
 	}
 
-	lines := db.Name + "\n"
+	lines := db.Name
 
 	for i, value := range db.Tables {
+		lines += "\n"
 		if i > 0 {
-			lines += "\n;;\n"
+			lines += ";;\n"
 		}
 		lines += value.Name + "\n"
 		lines += value.GetFieldsString()

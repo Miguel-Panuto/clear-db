@@ -14,6 +14,10 @@ func parseToDatabase(s string) *database.Database {
 	tables := strings.Split(strings.Replace(s, dbName+"\n", "", 1), "\n;;\n")
 	db := database.NewDatabase(dbName)
 
+	if len(lines) == 1 {
+		return db
+	}
+
 	for _, rawTable := range tables {
 		splitedRawTable := utils.Split(rawTable, "\n")
 		tableName := splitedRawTable[0]
