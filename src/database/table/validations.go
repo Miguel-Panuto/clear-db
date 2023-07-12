@@ -2,7 +2,6 @@ package table
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -50,7 +49,6 @@ func getValueType(value string, dataType string) (interface{}, error) {
 
 	switch dataType {
 	case "string":
-		fmt.Println(value)
 		if utils.IsBetween(value, "'", "'") {
 			return strings.ReplaceAll(value, "'", ""), nil
 		}
