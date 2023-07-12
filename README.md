@@ -8,8 +8,8 @@ Just run the main.go file.
 
 ## Commands
 
-  * CREATE DATABASE dbName;
-    * The command itself ins't case sensitive, you can run like this cReAtE DaTaBase, but the database name it is case sensitive.
+  * NEW DB dbName;
+    * The command itself ins't case sensitive, you can run like this nEw Db, but the database name it is case sensitive.
     * This command will just craete the database.
   * LIST DBS;
     * This command it ins't case sensitive as well, you can use this LiST DbS
