@@ -3,7 +3,6 @@ package engine
 import (
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/miguel-panuto/clear-db/src/database"
@@ -12,10 +11,10 @@ import (
 )
 
 func (e *Engine) listDatabases() {
-	header := []string{"Name", "Tables"}
+	header := []string{"Name"}
 	var rows [][]string
 	for _, db := range e.databases {
-		rows = append(rows, []string{db.Name, strconv.Itoa(db.GetTablesNumber())})
+		rows = append(rows, []string{db})
 	}
 	engine_utils.PrintTable(header, rows)
 }
@@ -31,17 +30,31 @@ func (e *Engine) createDatabase(dbName string) error {
 	}
 
 	db := database.NewDatabase(strings.TrimSpace(dbName))
-	e.databases = append(e.databases, db)
+	e.databases = append(e.databases, db.Name)
 	fmt.Printf("Database created %s \n", db.Name)
 	go engine_io.SaveData(db)
+	return nil
+}
+
+func (e *Engine) useDb(name string) error {
+	if !e.foundDatabaseByName(name) {
+		return errors.New("database not finded")
+	}
+
+	db, err := engine_io.ReadDatabase(name)
+
+	if err != nil {
+		return err
+	}
+
+	e.selectedDatabase = db
 	return nil
 }
 
 func (e *Engine) foundDatabaseByName(name string) bool {
 	found := false
 	for _, db := range e.databases {
-		if db.Name == name {
-			e.selectedDatabase = db
+		if db == name {
 			found = true
 			break
 		}

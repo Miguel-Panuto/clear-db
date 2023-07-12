@@ -9,8 +9,9 @@ import (
 	"github.com/miguel-panuto/clear-db/src/database"
 )
 
-func LoadDatabases() ([]*database.Database, error) {
-	dir := "data"
+const dir string = "data"
+
+func LoadDatabases() ([]string, error) {
 
 	dirFile, err := os.Open(dir)
 	if err != nil {
@@ -23,26 +24,29 @@ func LoadDatabases() ([]*database.Database, error) {
 		return nil, fmt.Errorf("failed to read directory: %w", err)
 	}
 
-	dbs := []*database.Database{}
+	dbs := []string{}
 
 	for _, f := range files {
 		if !f.IsDir() && strings.HasSuffix(f.Name(), ".cdb") {
-			filePath := filepath.Join(dir, f.Name())
-
-			file, err := os.ReadFile(filePath)
-			if err != nil {
-				return nil, fmt.Errorf("failed to open file %s: %w", filePath, err)
-			}
-
-			db := parseToDatabase(string(file))
-
-			if err != nil {
-				return nil, err
-			}
-
-			dbs = append(dbs, db)
+			dbs = append(dbs, strings.ReplaceAll(f.Name(), ".cdb", ""))
 		}
 	}
 
 	return dbs, nil
+}
+
+func ReadDatabase(dbName string) (*database.Database, error) {
+	filePath := filepath.Join(dir, dbName+".cdb")
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open file %s: %w", filePath, err)
+	}
+
+	db := parseToDatabase(string(file))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
