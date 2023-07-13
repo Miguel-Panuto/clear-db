@@ -43,6 +43,10 @@ func ParseString(statement string) (*Command, error) {
 		return insertTable(parsedStatement)
 	}
 
+	if utils.VerifyLowerPrefix(parsedStatement, "find") {
+		return findInTable(parsedStatement)
+	}
+
 	if utils.VerifyLower(parsedStatement, "exit") {
 		return &Command{Operation: engine_enums.EXIT}, nil
 	}
