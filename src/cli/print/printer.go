@@ -1,11 +1,13 @@
-package engine_utils
+package cli_print
 
 import (
 	"fmt"
 	"strings"
 )
 
-func PrintTable(header []string, rows [][]string) {
+func PrintRows(rows [][]string) {
+	header := rows[0]
+	rows = rows[1:]
 	columnLengths := make([]int, len(header))
 
 	for i, h := range header {
