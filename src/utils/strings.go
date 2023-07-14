@@ -54,12 +54,18 @@ func SubString(s string, from string, until string) string {
 	return substring
 }
 
+func SubSplit(s string, from string, until string, sep string) []string {
+	s = SubString(s, from, until)
+	splited := TrimSplit(s, sep)
+	return splited
+}
+
 func VerifyLowerPrefix(s string, prefix string) bool {
-	aux := strings.ToLower(s)
+	s = strings.ToLower(s)
 
-	aux = strings.TrimSpace(aux)
+	s = strings.TrimSpace(s)
 
-	return strings.HasPrefix(aux, prefix)
+	return strings.HasPrefix(s, prefix)
 }
 
 func VerifyLower(s string, command string) bool {

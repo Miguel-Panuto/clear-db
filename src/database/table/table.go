@@ -80,9 +80,18 @@ func (t *Table) GetFieldsString() string {
 func (t *Table) GetFields() []string {
 	arr := make([]string, len(t.Fields))
 
-	for _, value := range t.Fields {
-		arr = append(arr, value.name)
+	for i := range t.Fields {
+		arr[i] = t.Fields[i].name
 	}
 
 	return arr
+}
+
+func (t *Table) GetFieldIndex(name string) int {
+	for i := range t.Fields {
+		if t.Fields[i].name == name {
+			return i
+		}
+	}
+	return -1
 }

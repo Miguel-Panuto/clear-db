@@ -5,6 +5,7 @@ import (
 
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
 	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
+	engine_utils "github.com/miguel-panuto/clear-db/src/engine/utils"
 )
 
 func (e *Engine) createTable(data engine_struct.TableCreation) error {
@@ -22,7 +23,7 @@ func (e *Engine) listTables() {
 }
 
 func (e *Engine) insert(data engine_struct.RowInsert) error {
-	table, err := e.selectedDatabase.FindTable(data.TabName)
+	table, err := e.selectedDatabase.FindTable(data.TableName)
 
 	if err != nil {
 		return err
@@ -34,5 +35,24 @@ func (e *Engine) insert(data engine_struct.RowInsert) error {
 	fmt.Println("new row was inserted")
 	go engine_io.UpdateFile(e.selectedDatabase)
 
+	return nil
+}
+
+func (e *Engine) findIn(data engine_struct.FindIn) error {
+	table, err := e.selectedDatabase.FindTable(data.TableName)
+
+	if err != nil {
+		return err
+	}
+
+	findData, err := table.FindIn(data.Columns)
+
+	if err != nil {
+		return err
+	}
+
+	header := findData[0]
+	findData = findData[1:]
+	engine_utils.PrintTable(header, findData)
 	return nil
 }

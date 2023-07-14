@@ -48,6 +48,21 @@ func TestSubstring(t *testing.T) {
 	}
 }
 
+func TestSubSplit(t *testing.T) {
+	got := SubSplit("{Name : Miguel}", "{", "}", ":")
+	want := []string{"Name", "Miguel"}
+
+	if len(got) != len(want) {
+		t.Errorf("they has to be the same size: %d - want: %d", len(got), len(want))
+	}
+
+	for i := range got {
+		if got[i] != want[i] {
+			t.Errorf("not expected value got: %s - want: %s", got[i], want[i])
+		}
+	}
+}
+
 func TestLowerPrefix(t *testing.T) {
 	got := VerifyLowerPrefix(" Use certain db", "use")
 	want := true
