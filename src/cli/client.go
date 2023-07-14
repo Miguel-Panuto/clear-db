@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	cli_print "github.com/miguel-panuto/clear-db/src/cli/print"
 	"github.com/miguel-panuto/clear-db/src/engine"
 )
 
@@ -17,10 +18,15 @@ func StartCli() {
 		fmt.Print("> ")
 		command, _ := reader.ReadString(';')
 		command = strings.TrimSpace(command)
-		err := engine.RunStatement(strings.ReplaceAll(command, ";", ""))
+		value, err := engine.RunStatement(strings.ReplaceAll(command, ";", ""))
 		if err != nil {
 			fmt.Println("Error:", err)
 			continue
+		}
+
+		rows, ok := value.([][]string)
+		if ok {
+			cli_print.PrintRows(rows)
 		}
 	}
 }

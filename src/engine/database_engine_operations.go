@@ -7,16 +7,16 @@ import (
 
 	"github.com/miguel-panuto/clear-db/src/database"
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
-	engine_utils "github.com/miguel-panuto/clear-db/src/engine/utils"
 )
 
-func (e *Engine) listDatabases() {
+func (e *Engine) listDatabases() [][]string {
 	header := []string{"Name"}
-	var rows [][]string
+	rows := [][]string{header}
 	for _, db := range e.databases {
 		rows = append(rows, []string{db})
 	}
-	engine_utils.PrintTable(header, rows)
+
+	return rows
 }
 
 func (e *Engine) createDatabase(dbName string) error {

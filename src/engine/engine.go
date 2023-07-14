@@ -26,38 +26,38 @@ func (e *Engine) isSelectedDatabase() error {
 	return nil
 }
 
-func (e *Engine) RunStatement(statement string) error {
+func (e *Engine) RunStatement(statement string) (interface{}, error) {
 	cmd, err := engine_parser.ParseString(statement)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	switch cmd.Operation {
 	case engine_enums.CREATE_DATABASE:
 		dbName, _ := cmd.Data.(string)
 
-		return e.createDatabase(dbName)
+		return nil, e.createDatabase(dbName)
 
 	case engine_enums.LIST_DATABASES:
-		e.listDatabases()
-		return nil
+
+		return e.listDatabases(), nil
 
 	case engine_enums.USE_DATABASE:
 		dbName, _ := cmd.Data.(string)
 
 		if err := e.useDb(dbName); err != nil {
-			return errors.New("database not founded")
+			return nil, errors.New("database not founded")
 		}
 
 		fmt.Println("Using database " + cmd.Data.(string))
-		return nil
+		return nil, nil
 
 	case engine_enums.CREATE_TABLE:
 		tableCreation, _ := cmd.Data.(engine_struct.TableCreation)
 
 		if err := e.isSelectedDatabase(); err != nil {
-			return err
+			return nil, err
 		}
 
 		err := e.createTable(tableCreation)
@@ -65,42 +65,41 @@ func (e *Engine) RunStatement(statement string) error {
 		if err != nil {
 			fmt.Println(err)
 		}
-		return nil
+		return nil, nil
 
 	case engine_enums.LIST_TABLES:
-		e.listTables()
-		return nil
+		if err := e.isSelectedDatabase(); err != nil {
+			return nil, err
+		}
+		tables := e.selectedDatabase.ListTables()
+		return tables, nil
 
 	case engine_enums.INSERT_INTO:
 		rowInsert, _ := cmd.Data.(engine_struct.RowInsert)
 
 		if err := e.isSelectedDatabase(); err != nil {
-			return err
+			return nil, err
 		}
 
 		if err := e.insert(rowInsert); err != nil {
-			return err
+			return nil, err
 		}
-		return nil
+		return nil, nil
 
 	case engine_enums.FIND_IN:
 		if err := e.isSelectedDatabase(); err != nil {
-			return err
+			return nil, err
 		}
 
 		findIn, _ := cmd.Data.(engine_struct.FindIn)
 
-		if err := e.findIn(findIn); err != nil {
-			return err
-		}
-
-		return nil
+		return e.findIn(findIn)
 
 	case engine_enums.EXIT:
 		os.Exit(0)
-		return nil
+		return nil, nil
 
 	default:
-		return err
+		return nil, err
 	}
 }

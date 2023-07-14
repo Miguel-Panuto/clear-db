@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/miguel-panuto/clear-db/src/database/table"
-	engine_utils "github.com/miguel-panuto/clear-db/src/engine/utils"
 )
 
 func (db *Database) isThereAnyTable(name string) bool {
@@ -31,13 +30,13 @@ func (db *Database) NewTable(name string, columns []string) error {
 	return nil
 }
 
-func (db *Database) ListTables() {
+func (db *Database) ListTables() [][]string {
 	header := []string{"Name", "Rows"}
-	var rows [][]string
+	rows := [][]string{header}
 	for _, table := range db.Tables {
 		rows = append(rows, []string{table.Name, strconv.Itoa(len(*table.Rows))})
 	}
-	engine_utils.PrintTable(header, rows)
+	return rows
 }
 
 func (db *Database) FindTable(tableName string) (*table.Table, error) {
