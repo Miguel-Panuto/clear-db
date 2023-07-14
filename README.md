@@ -60,3 +60,17 @@ INSERT user: {
   name:: 'string value',
   age:: 24
 };
+
+### Finding on database
+
+In SQL we have the SELECT, and put the columns that you want and '*' for SELECT every column, but in clear-db it is very different, here we have find in command. The command follows:
+
+Command: find in users;
+
+With the command, it will pick from the table all columns.
+
+But there is a way to select the columns that you want, with:
+
+Command: find {name, age} in users;
+
+This will return only the columns name and age.
