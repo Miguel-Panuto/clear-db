@@ -16,9 +16,12 @@ func ToStringArr(args []interface{}) []string {
 	arr := []string{}
 
 	for _, el := range args {
-		str := fmt.Sprintf("%v", el)
-		arr = append(arr, str)
+		arr = append(arr, InterfaceToString(el))
 	}
 
 	return arr
+}
+
+func InterfaceToString(el interface{}) string {
+	return fmt.Sprintf("%v", el)
 }

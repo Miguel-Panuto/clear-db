@@ -64,3 +64,21 @@ func (t *Table) InsertFromReader(row []interface{}) error {
 
 	return nil
 }
+
+func (t *Table) FindIn(columns []string) ([][]string, error) {
+	if len(columns) <= 0 {
+		columns = t.GetFields()
+	}
+	lines := [][]string{columns}
+
+	for _, row := range *t.Rows {
+		line := []string{}
+		for _, col := range columns {
+			i := t.GetFieldIndex(col)
+			line = append(line, utils.InterfaceToString(row[i]))
+		}
+		lines = append(lines, line)
+	}
+
+	return lines, nil
+}

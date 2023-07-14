@@ -35,34 +35,32 @@ func (e *Engine) RunStatement(statement string) error {
 
 	switch cmd.Operation {
 	case engine_enums.CREATE_DATABASE:
-		if _, ok := cmd.Data.(string); !ok {
-			return errors.New("not entered valid name")
-		}
+		dbName, _ := cmd.Data.(string)
 
-		return e.createDatabase(cmd.Data.(string))
+		return e.createDatabase(dbName)
 
 	case engine_enums.LIST_DATABASES:
 		e.listDatabases()
 		return nil
 
 	case engine_enums.USE_DATABASE:
-		if _, ok := cmd.Data.(string); !ok {
-			return errors.New("not entered valid name")
+		dbName, _ := cmd.Data.(string)
+
+		if err := e.useDb(dbName); err != nil {
+			return errors.New("database not founded")
 		}
-		e.useDb(cmd.Data.(string))
 
 		fmt.Println("Using database " + cmd.Data.(string))
 		return nil
 
 	case engine_enums.CREATE_TABLE:
-		if _, ok := cmd.Data.(engine_struct.TableCreation); !ok {
-			return errors.New("not entered valid name")
-		}
+		tableCreation, _ := cmd.Data.(engine_struct.TableCreation)
+
 		if err := e.isSelectedDatabase(); err != nil {
 			return err
 		}
 
-		err := e.createTable(cmd.Data.(engine_struct.TableCreation))
+		err := e.createTable(tableCreation)
 
 		if err != nil {
 			fmt.Println(err)
@@ -74,12 +72,28 @@ func (e *Engine) RunStatement(statement string) error {
 		return nil
 
 	case engine_enums.INSERT_INTO:
+		rowInsert, _ := cmd.Data.(engine_struct.RowInsert)
+
 		if err := e.isSelectedDatabase(); err != nil {
 			return err
 		}
-		if err := e.insert(cmd.Data.(engine_struct.RowInsert)); err != nil {
+
+		if err := e.insert(rowInsert); err != nil {
 			return err
 		}
+		return nil
+
+	case engine_enums.FIND_IN:
+		if err := e.isSelectedDatabase(); err != nil {
+			return err
+		}
+
+		findIn, _ := cmd.Data.(engine_struct.FindIn)
+
+		if err := e.findIn(findIn); err != nil {
+			return err
+		}
+
 		return nil
 
 	case engine_enums.EXIT:
@@ -87,6 +101,6 @@ func (e *Engine) RunStatement(statement string) error {
 		return nil
 
 	default:
-		return errors.New("command not found")
+		return err
 	}
 }

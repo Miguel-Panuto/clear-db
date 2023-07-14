@@ -6,6 +6,11 @@ type TableCreation struct {
 }
 
 type RowInsert struct {
-	TabName string
-	Row     []string
+	TableName string
+	Row       []string
+}
+
+type FindIn struct {
+	Columns   []string
+	TableName string
 }

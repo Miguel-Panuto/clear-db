@@ -29,5 +29,5 @@ func insertTable(parsedStatement string) (*Command, error) {
 	row := utils.TrimSplit(rawRow, ",")
 	return &Command{
 		Operation: engine_enums.INSERT_INTO,
-		Data:      engine_struct.RowInsert{TabName: tableName, Row: row}}, nil
+		Data:      engine_struct.RowInsert{TableName: tableName, Row: row}}, nil
 }
