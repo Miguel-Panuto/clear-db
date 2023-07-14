@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -92,4 +93,15 @@ func ContainsInside(arr []string, str string) bool {
 		}
 	}
 	return false
+}
+
+func MultipleSplit(s string, delimiters ...string) []string {
+	re := regexp.MustCompile(`(` + strings.Join(delimiters, "|") + `)`)
+	parts := re.Split(s, -1)
+
+	for i := range parts {
+		parts[i] = strings.TrimSpace(parts[i])
+	}
+
+	return parts
 }

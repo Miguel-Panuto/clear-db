@@ -39,6 +39,33 @@ func TestTrimSplit(t *testing.T) {
 	}
 }
 
+func TestMultipleSplit(t *testing.T) {
+	got := MultipleSplit("Name : Miguel;Panuto", ":", ";")
+	want := []string{"Name", "Miguel", "Panuto"}
+
+	if len(got) != len(want) {
+		t.Errorf("they has to be the same size: %d - want: %d", len(got), len(want))
+	}
+
+	for i := range got {
+		if got[i] != want[i] {
+			t.Errorf("not expected value got: %s - want: %s", got[i], want[i])
+		}
+	}
+	got = MultipleSplit("Name : MiguelPanuto", ":", ";")
+	want = []string{"Name", "MiguelPanuto"}
+
+	if len(got) != len(want) {
+		t.Errorf("they has to be the same size: %d - want: %d", len(got), len(want))
+	}
+
+	for i := range got {
+		if got[i] != want[i] {
+			t.Errorf("not expected value got: %s - want: %s", got[i], want[i])
+		}
+	}
+}
+
 func TestSubstring(t *testing.T) {
 	got := SubString("{Name}", "{", "}")
 	want := "Name"
