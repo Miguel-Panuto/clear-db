@@ -12,5 +12,6 @@ type RowInsert struct {
 
 type FindIn struct {
 	Columns   []string
+	Where     []string
 	TableName string
 }

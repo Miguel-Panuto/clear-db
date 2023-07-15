@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -92,4 +93,14 @@ func ContainsInside(arr []string, str string) bool {
 		}
 	}
 	return false
+}
+
+func MultipleSplit(s string, splitters ...string) []string {
+	reg := "(?i)"
+	for _, splitter := range splitters {
+		reg += fmt.Sprintf(`\s*%s\s*|`, regexp.QuoteMeta(splitter))
+	}
+	reg = strings.TrimSuffix(reg, "|")
+	regexSplitter := regexp.MustCompile(reg)
+	return regexSplitter.Split(s, -1)
 }
