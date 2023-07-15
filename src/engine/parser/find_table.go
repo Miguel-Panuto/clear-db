@@ -10,6 +10,10 @@ import (
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
+func verifyContainsBraces(s string) bool {
+	return utils.IsBetween(s, "{", "}")
+}
+
 func findInTable(statement string) (*Command, error) {
 	re := regexp.MustCompile(`(?i)in`)
 	if !re.MatchString(statement) {
@@ -19,7 +23,7 @@ func findInTable(statement string) (*Command, error) {
 	re = regexp.MustCompile(`(?i)find`)
 	statement = re.ReplaceAllString(statement, "")
 
-	splited := utils.TrimSplit(statement, "in")
+	splited := utils.MultipleSplit(statement, "in", "where")
 
 	if strings.Contains(splited[0], "{") != strings.Contains(splited[0], "}") {
 		return nil, errors.New("pair of brackets not correctly closed {}")
@@ -30,15 +34,23 @@ func findInTable(statement string) (*Command, error) {
 	}
 
 	columns := []string{}
+	where := []string{}
 	if utils.ContainsMany(splited[0], "{", "}") {
-		if !utils.IsBetween(splited[0], "{", "}") {
+		if !verifyContainsBraces(splited[0]) {
 			return nil, errors.New("when has {} mas have to be closed before in")
 		}
 		columns = utils.SubSplit(splited[0], "{", "}", ",")
 	}
 
+	if len(splited) >= 3 {
+		if !verifyContainsBraces(splited[2]) {
+			return nil, errors.New("when has {} mas have to be closed after where")
+		}
+		where = utils.SubSplit(splited[2], "{", "}", ",")
+	}
+
 	return &Command{
 		Operation: engine_enums.FIND_IN,
-		Data:      engine_struct.FindIn{TableName: splited[1], Columns: columns},
+		Data:      engine_struct.FindIn{TableName: splited[1], Columns: columns, Where: where},
 	}, nil
 }
