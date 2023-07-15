@@ -34,7 +34,7 @@ func findInTable(statement string) (*Command, error) {
 	}
 
 	columns := []string{}
-	where := []string{}
+	where := []engine_struct.Where{}
 	if utils.ContainsMany(splited[0], "{", "}") {
 		if !verifyContainsBraces(splited[0]) {
 			return nil, errors.New("when has {} mas have to be closed before in")
@@ -46,7 +46,11 @@ func findInTable(statement string) (*Command, error) {
 		if !verifyContainsBraces(splited[2]) {
 			return nil, errors.New("when has {} mas have to be closed after where")
 		}
-		where = utils.SubSplit(splited[2], "{", "}", ",")
+		rawWhere := utils.SubSplit(splited[2], "{", "}", ",")
+
+		// for _, value := range rawWhere {
+
+		// }
 	}
 
 	return &Command{

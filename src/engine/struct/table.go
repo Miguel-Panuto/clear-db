@@ -12,6 +12,12 @@ type RowInsert struct {
 
 type FindIn struct {
 	Columns   []string
-	Where     []string
+	Where     []Where
 	TableName string
+}
+
+type Where struct {
+	column   string
+	operator string
+	value    string
 }
