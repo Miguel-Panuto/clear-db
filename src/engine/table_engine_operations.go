@@ -40,7 +40,7 @@ func (e *Engine) findIn(data engine_struct.FindIn) ([][]string, error) {
 		return [][]string{}, err
 	}
 
-	findData, err := table.FindIn(data.Columns)
+	findData, err := table.FindIn(data.Columns, data.Where)
 
 	if err != nil {
 		return [][]string{}, err

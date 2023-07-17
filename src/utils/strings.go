@@ -107,7 +107,6 @@ func MultipleSplit(s string, splitters ...string) []string {
 }
 
 func SplitByOperators(s string, operators ...string) []string {
-	// Sort the operators by length in descending order.
 	sort.Slice(operators, func(i, j int) bool {
 		return len(operators[i]) > len(operators[j])
 	})
@@ -129,7 +128,6 @@ func SplitByOperators(s string, operators ...string) []string {
 	res := make([]string, 0, len(parts)+len(matches))
 	for i := range parts {
 		trimmedPart := strings.TrimSpace(parts[i])
-		trimmedPart = strings.Trim(trimmedPart, "'") // New line added here
 		res = append(res, trimmedPart)
 		if i < len(matches) {
 			res = append(res, strings.TrimSpace(matches[i]))
