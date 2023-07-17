@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
-	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
-	engine_parser "github.com/miguel-panuto/clear-db/src/engine/parser"
-	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
+	domain "github.com/miguel-panuto/clear-db/src/domain/struct"
+	engine_enums "github.com/miguel-panuto/clear-db/src/engine/internal/enums"
+	engine_io "github.com/miguel-panuto/clear-db/src/engine/internal/io"
+	engine_parser "github.com/miguel-panuto/clear-db/src/engine/internal/parser"
 )
 
 func NewEngine() *Engine {
@@ -54,7 +54,7 @@ func (e *Engine) RunStatement(statement string) (interface{}, error) {
 		return nil, nil
 
 	case engine_enums.CREATE_TABLE:
-		tableCreation, _ := cmd.Data.(engine_struct.TableCreation)
+		tableCreation, _ := cmd.Data.(domain.TableCreation)
 
 		if err := e.isSelectedDatabase(); err != nil {
 			return nil, err
@@ -75,7 +75,7 @@ func (e *Engine) RunStatement(statement string) (interface{}, error) {
 		return tables, nil
 
 	case engine_enums.INSERT_INTO:
-		rowInsert, _ := cmd.Data.(engine_struct.RowInsert)
+		rowInsert, _ := cmd.Data.(domain.RowInsert)
 
 		if err := e.isSelectedDatabase(); err != nil {
 			return nil, err
@@ -91,7 +91,7 @@ func (e *Engine) RunStatement(statement string) (interface{}, error) {
 			return nil, err
 		}
 
-		findIn, _ := cmd.Data.(engine_struct.FindIn)
+		findIn, _ := cmd.Data.(domain.FindIn)
 
 		return e.findIn(findIn)
 

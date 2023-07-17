@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/miguel-panuto/clear-db/src/database"
-	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
+	engine_io "github.com/miguel-panuto/clear-db/src/engine/internal/io"
 )
 
 func (e *Engine) listDatabases() [][]string {

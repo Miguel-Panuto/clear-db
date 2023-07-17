@@ -5,12 +5,13 @@ import (
 	"regexp"
 	"strings"
 
-	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
-	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
+	engine_enums "github.com/miguel-panuto/clear-db/src/engine/internal/enums"
+	engine_struct "github.com/miguel-panuto/clear-db/src/engine/internal/struct"
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
 func verifyContainsBraces(s string) bool {
+	s = strings.TrimSpace(s)
 	return utils.IsBetween(s, "{", "}")
 }
 

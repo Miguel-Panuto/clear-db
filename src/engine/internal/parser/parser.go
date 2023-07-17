@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	engine_enums "github.com/miguel-panuto/clear-db/src/engine/enums"
+	engine_enums "github.com/miguel-panuto/clear-db/src/engine/internal/enums"
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 

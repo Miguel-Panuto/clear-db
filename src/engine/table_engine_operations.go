@@ -3,11 +3,11 @@ package engine
 import (
 	"fmt"
 
-	engine_io "github.com/miguel-panuto/clear-db/src/engine/io"
-	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
+	domain "github.com/miguel-panuto/clear-db/src/domain/struct"
+	engine_io "github.com/miguel-panuto/clear-db/src/engine/internal/io"
 )
 
-func (e *Engine) createTable(data engine_struct.TableCreation) error {
+func (e *Engine) createTable(data domain.TableCreation) error {
 	err := e.selectedDatabase.NewTable(data.DbName, data.Fields)
 	if err != nil {
 		return err
@@ -17,7 +17,7 @@ func (e *Engine) createTable(data engine_struct.TableCreation) error {
 	return nil
 }
 
-func (e *Engine) insert(data engine_struct.RowInsert) error {
+func (e *Engine) insert(data domain.RowInsert) error {
 	table, err := e.selectedDatabase.FindTable(data.TableName)
 
 	if err != nil {
@@ -33,7 +33,7 @@ func (e *Engine) insert(data engine_struct.RowInsert) error {
 	return nil
 }
 
-func (e *Engine) findIn(data engine_struct.FindIn) ([][]string, error) {
+func (e *Engine) findIn(data domain.FindIn) ([][]string, error) {
 	table, err := e.selectedDatabase.FindTable(data.TableName)
 
 	if err != nil {
