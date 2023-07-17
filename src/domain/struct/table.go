@@ -1,4 +1,4 @@
-package engine_struct
+package domain
 
 type TableCreation struct {
 	DbName string
