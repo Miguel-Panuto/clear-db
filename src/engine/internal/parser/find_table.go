@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"strings"
 
+	domain "github.com/miguel-panuto/clear-db/src/domain/struct"
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/internal/enums"
-	engine_struct "github.com/miguel-panuto/clear-db/src/engine/internal/struct"
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
@@ -35,7 +35,7 @@ func findInTable(statement string) (*Command, error) {
 	}
 
 	columns := []string{}
-	where := []engine_struct.Where{}
+	where := []domain.Where{}
 	if utils.ContainsMany(splited[0], "{", "}") {
 		if !verifyContainsBraces(splited[0]) {
 			return nil, errors.New("when has {} mas have to be closed before in")
@@ -54,7 +54,7 @@ func findInTable(statement string) (*Command, error) {
 			if len(splitedWhere) < 3 {
 				return nil, errors.New("failed to convert to where statement")
 			}
-			where = append(where, engine_struct.Where{
+			where = append(where, domain.Where{
 				Column:   splitedWhere[0],
 				Operator: splitedWhere[1],
 				Value:    splitedWhere[2],
@@ -64,6 +64,6 @@ func findInTable(statement string) (*Command, error) {
 
 	return &Command{
 		Operation: engine_enums.FIND_IN,
-		Data:      engine_struct.FindIn{TableName: splited[1], Columns: columns, Where: where},
+		Data:      domain.FindIn{TableName: splited[1], Columns: columns, Where: where},
 	}, nil
 }
