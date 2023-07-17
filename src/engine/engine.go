@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	domain "github.com/miguel-panuto/clear-db/src/domain/struct"
+	"github.com/miguel-panuto/clear-db/src/domain"
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/internal/enums"
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/internal/io"
 	engine_parser "github.com/miguel-panuto/clear-db/src/engine/internal/parser"

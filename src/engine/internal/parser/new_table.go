@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	domain "github.com/miguel-panuto/clear-db/src/domain/struct"
+	"github.com/miguel-panuto/clear-db/src/domain"
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/internal/enums"
 	"github.com/miguel-panuto/clear-db/src/utils"
 )

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	domain "github.com/miguel-panuto/clear-db/src/domain/struct"
+	"github.com/miguel-panuto/clear-db/src/domain"
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 

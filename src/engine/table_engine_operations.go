@@ -3,7 +3,7 @@ package engine
 import (
 	"fmt"
 
-	domain "github.com/miguel-panuto/clear-db/src/domain/struct"
+	"github.com/miguel-panuto/clear-db/src/domain"
 	engine_io "github.com/miguel-panuto/clear-db/src/engine/internal/io"
 )
 
