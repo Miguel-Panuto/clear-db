@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	engine_struct "github.com/miguel-panuto/clear-db/src/engine/struct"
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
@@ -65,10 +66,17 @@ func (t *Table) InsertFromReader(row []interface{}) error {
 	return nil
 }
 
-func (t *Table) FindIn(columns []string) ([][]string, error) {
+func (t *Table) FindIn(columns []string, w []engine_struct.Where) ([][]string, error) {
 	if len(columns) <= 0 {
 		columns = t.GetFields()
 	}
+
+	for _, value := range w {
+		if !utils.ContainsInside(t.GetFields(), value.Column) {
+			return [][]string{}, errors.New("column not exists")
+		}
+	}
+
 	lines := [][]string{columns}
 
 	for _, row := range *t.Rows {

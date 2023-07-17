@@ -66,6 +66,33 @@ func TestMultipleSplit(t *testing.T) {
 	}
 }
 
+func TestSplitByOperators(t *testing.T) {
+	got := SplitByOperators("name <= 'miguel'", "=", ">", ">=", "<", "<=", "in", "contains")
+	want := []string{"name", "<=", "miguel"}
+
+	if len(got) != len(want) {
+		t.Errorf("they has to be the same size: %d - want: %d", len(got), len(want))
+	}
+
+	for i := range got {
+		if got[i] != want[i] {
+			t.Errorf("not expected value got: %s - want: %s", got[i], want[i])
+		}
+	}
+	got = SplitByOperators("name < 'miguel'", "=", ">", ">=", "<", "<=", "in", "contains")
+	want = []string{"name", "<", "miguel"}
+
+	if len(got) != len(want) {
+		t.Errorf("they has to be the same size: %d - want: %d", len(got), len(want))
+	}
+
+	for i := range got {
+		if got[i] != want[i] {
+			t.Errorf("not expected value got: %s - want: %s", got[i], want[i])
+		}
+	}
+}
+
 func TestSubstring(t *testing.T) {
 	got := SubString("{Name}", "{", "}")
 	want := "Name"

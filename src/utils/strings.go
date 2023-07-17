@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -103,4 +104,34 @@ func MultipleSplit(s string, splitters ...string) []string {
 	reg = strings.TrimSuffix(reg, "|")
 	regexSplitter := regexp.MustCompile(reg)
 	return regexSplitter.Split(s, -1)
+}
+
+func SplitByOperators(s string, operators ...string) []string {
+	sort.Slice(operators, func(i, j int) bool {
+		return len(operators[i]) > len(operators[j])
+	})
+
+	ops := make([]string, len(operators))
+	for i, operator := range operators {
+		ops[i] = regexp.QuoteMeta(strings.TrimSpace(operator))
+	}
+	opsRegex := strings.Join(ops, "|")
+
+	opsRegex = fmt.Sprintf(`(?i)(%s)`, opsRegex)
+
+	re := regexp.MustCompile(opsRegex)
+
+	parts := re.Split(s, -1)
+
+	matches := re.FindAllString(s, -1)
+
+	res := make([]string, 0, len(parts)+len(matches))
+	for i := range parts {
+		trimmedPart := strings.TrimSpace(parts[i])
+		res = append(res, trimmedPart)
+		if i < len(matches) {
+			res = append(res, strings.TrimSpace(matches[i]))
+		}
+	}
+	return res
 }
