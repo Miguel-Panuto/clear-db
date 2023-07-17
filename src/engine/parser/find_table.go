@@ -11,6 +11,7 @@ import (
 )
 
 func verifyContainsBraces(s string) bool {
+	s = strings.TrimSpace(s)
 	return utils.IsBetween(s, "{", "}")
 }
 
