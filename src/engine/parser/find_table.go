@@ -48,9 +48,17 @@ func findInTable(statement string) (*Command, error) {
 		}
 		rawWhere := utils.SubSplit(splited[2], "{", "}", ",")
 
-		// for _, value := range rawWhere {
-
-		// }
+		for _, value := range rawWhere {
+			splitedWhere := utils.SplitByOperators(value, "=", ">", ">=", "<=", "contains", "stw", "edw")
+			if len(splitedWhere) < 3 {
+				return nil, errors.New("failed to convert to where statement")
+			}
+			where = append(where, engine_struct.Where{
+				Column:   splitedWhere[0],
+				Operator: splitedWhere[1],
+				Value:    splitedWhere[2],
+			})
+		}
 	}
 
 	return &Command{

@@ -17,7 +17,7 @@ type FindIn struct {
 }
 
 type Where struct {
-	column   string
-	operator string
-	value    string
+	Column   string
+	Operator string
+	Value    string
 }
