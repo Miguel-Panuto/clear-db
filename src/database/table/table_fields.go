@@ -30,12 +30,3 @@ func (t *Table) GetFields() []string {
 
 	return arr
 }
-
-func (t *Table) GetFieldIndex(name string) int {
-	for i := range t.Fields {
-		if t.Fields[i].name == name {
-			return i
-		}
-	}
-	return -1
-}

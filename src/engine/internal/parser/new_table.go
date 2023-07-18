@@ -4,8 +4,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/miguel-panuto/clear-db/src/domain"
 	engine_enums "github.com/miguel-panuto/clear-db/src/engine/internal/enums"
-	engine_struct "github.com/miguel-panuto/clear-db/src/engine/internal/struct"
 	"github.com/miguel-panuto/clear-db/src/utils"
 )
 
@@ -19,5 +19,5 @@ func newTable(parsedStatement string) (*Command, error) {
 	for _, value := range fields {
 		parsedFields = append(parsedFields, strings.TrimSpace(value))
 	}
-	return &Command{Operation: engine_enums.CREATE_TABLE, Data: engine_struct.TableCreation{DbName: tableName, Fields: parsedFields}}, nil
+	return &Command{Operation: engine_enums.CREATE_TABLE, Data: domain.TableCreation{DbName: tableName, Fields: parsedFields}}, nil
 }
